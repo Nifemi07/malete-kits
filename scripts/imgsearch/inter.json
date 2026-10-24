@@ -1,0 +1,33 @@
+🚀 Initializing Z-AI SDK...
+🔎 Searching images: "Inter Milan home football jersey 2025 product photo"
+✅ Got 3 images
+{
+  "success": true,
+  "query": "Inter Milan home football jersey 2025 product photo",
+  "count": 3,
+  "ranked": false,
+  "captioned_count": 0,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/edb152abc32f.png",
+      "caption": "",
+      "source": "KICKS CREW",
+      "original_width": "1080px",
+      "original_height": "1080px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/f27d3682ba5f.jpg",
+      "caption": "",
+      "source": "PassaSports",
+      "original_width": "1500px",
+      "original_height": "1500px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/152c827c37a1.jpg",
+      "caption": "",
+      "source": "AROHON",
+      "original_width": "1920px",
+      "original_height": "2560px"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#17191C"/>
+  <path d="M22 14 L32 18 L42 14 L46 26 L41 30 L41 48 L23 48 L23 30 L18 26 Z" fill="#0E4632" stroke="#B9F73E" stroke-width="2.5" stroke-linejoin="round"/>
+  <text x="32" y="41" font-family="Arial Black, Arial, sans-serif" font-size="14" font-weight="900" fill="#F5F3EC" text-anchor="middle">MK</text>
+</svg>

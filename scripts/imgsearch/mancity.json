@@ -1,0 +1,33 @@
+🚀 Initializing Z-AI SDK...
+🔎 Searching images: "Manchester City home football jersey 2025 product photo"
+✅ Got 3 images
+{
+  "success": true,
+  "query": "Manchester City home football jersey 2025 product photo",
+  "count": 3,
+  "ranked": false,
+  "captioned_count": 0,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/463d8f4fc954.webp",
+      "caption": "",
+      "source": "Football Kingdom",
+      "original_width": "900px",
+      "original_height": "900px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/aa26e55de4e0.jpg",
+      "caption": "",
+      "source": "Zone11Kits",
+      "original_width": "1080px",
+      "original_height": "1350px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/3f90df962d2c.png",
+      "caption": "",
+      "source": "Football-Authentica",
+      "original_width": "1636px",
+      "original_height": "2048px"
+    }
+  ]
+}

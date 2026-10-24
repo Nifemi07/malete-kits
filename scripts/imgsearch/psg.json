@@ -1,0 +1,33 @@
+🚀 Initializing Z-AI SDK...
+🔎 Searching images: "Paris Saint-Germain PSG home football jersey 2025 product photo"
+✅ Got 3 images
+{
+  "success": true,
+  "query": "Paris Saint-Germain PSG home football jersey 2025 product photo",
+  "count": 3,
+  "ranked": false,
+  "captioned_count": 0,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/9bea4d56ed54.jpg",
+      "caption": "",
+      "source": "Zalando UK",
+      "original_width": "800px",
+      "original_height": "1155px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/c200af342d16.png",
+      "caption": "",
+      "source": "MLB Shop",
+      "original_width": "1018px",
+      "original_height": "1018px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/668adff18cef.jpg",
+      "caption": "",
+      "source": "Protech Kit Zone",
+      "original_width": "1000px",
+      "original_height": "1000px"
+    }
+  ]
+}

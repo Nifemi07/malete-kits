@@ -1,0 +1,33 @@
+🚀 Initializing Z-AI SDK...
+🔎 Searching images: "FC Barcelona home football jersey 2025 product photo"
+✅ Got 3 images
+{
+  "success": true,
+  "query": "FC Barcelona home football jersey 2025 product photo",
+  "count": 3,
+  "ranked": false,
+  "captioned_count": 0,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/c155c91bb6d9.png",
+      "caption": "",
+      "source": "",
+      "original_width": "2000px",
+      "original_height": "2000px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/9fbb448da9aa.jpg",
+      "caption": "",
+      "source": "",
+      "original_width": "1010px",
+      "original_height": "1000px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/0fc69bd1e809.jpg",
+      "caption": "",
+      "source": "",
+      "original_width": "1920px",
+      "original_height": "1920px"
+    }
+  ]
+}

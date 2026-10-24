@@ -1,0 +1,33 @@
+🚀 Initializing Z-AI SDK...
+🔎 Searching images: "England national football team jersey 2025 product photo"
+✅ Got 3 images
+{
+  "success": true,
+  "query": "England national football team jersey 2025 product photo",
+  "count": 3,
+  "ranked": false,
+  "captioned_count": 0,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/e07476531591.jpg",
+      "caption": "",
+      "source": "The Soccer Factory",
+      "original_width": "2000px",
+      "original_height": "2000px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/b87470889657.jpg",
+      "caption": "",
+      "source": "Warrix",
+      "original_width": "900px",
+      "original_height": "1200px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/60e1d43da26e.png",
+      "caption": "",
+      "source": "Premium Soccer",
+      "original_width": "1640px",
+      "original_height": "924px"
+    }
+  ]
+}

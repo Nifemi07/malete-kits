@@ -1,0 +1,33 @@
+🚀 Initializing Z-AI SDK...
+🔎 Searching images: "Brazil national team yellow football jersey product photo"
+✅ Got 3 images
+{
+  "success": true,
+  "query": "Brazil national team yellow football jersey product photo",
+  "count": 3,
+  "ranked": false,
+  "captioned_count": 0,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/d4b59ccb201f.jpg",
+      "caption": "",
+      "source": "eBay",
+      "original_width": "1200px",
+      "original_height": "1200px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/049958140b97.jpg",
+      "caption": "",
+      "source": "eBay",
+      "original_width": "900px",
+      "original_height": "1200px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/c94de5543bb3.jpg",
+      "caption": "",
+      "source": "Futivo Jerseys",
+      "original_width": "1200px",
+      "original_height": "1200px"
+    }
+  ]
+}

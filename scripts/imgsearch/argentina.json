@@ -1,0 +1,33 @@
+🚀 Initializing Z-AI SDK...
+🔎 Searching images: "Argentina national team football jersey 2025 product photo"
+✅ Got 3 images
+{
+  "success": true,
+  "query": "Argentina national team football jersey 2025 product photo",
+  "count": 3,
+  "ranked": false,
+  "captioned_count": 0,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/d721fe3416dc.jpg",
+      "caption": "",
+      "source": "My-Soccer",
+      "original_width": "2083px",
+      "original_height": "2083px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/c9b344802a9e.jpg",
+      "caption": "",
+      "source": "Bigfirefashion",
+      "original_width": "1200px",
+      "original_height": "1200px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/c061e9f39343.jpg",
+      "caption": "",
+      "source": "Shop Football Jerseys Online | Campeon Sports – Campeon Sports",
+      "original_width": "3000px",
+      "original_height": "4000px"
+    }
+  ]
+}

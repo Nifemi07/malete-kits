@@ -1,0 +1,33 @@
+🚀 Initializing Z-AI SDK...
+🔎 Searching images: "Arsenal home football jersey 2025 product photo"
+✅ Got 3 images
+{
+  "success": true,
+  "query": "Arsenal home football jersey 2025 product photo",
+  "count": 3,
+  "ranked": false,
+  "captioned_count": 0,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/ec7112f8c029.jpg",
+      "caption": "",
+      "source": "Shopee Singapore",
+      "original_width": "1024px",
+      "original_height": "1024px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/c7a0a6371fac.jpg",
+      "caption": "",
+      "source": "PassaSports",
+      "original_width": "1500px",
+      "original_height": "1500px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/e443d2e2bc4c.jpg",
+      "caption": "",
+      "source": "Adidas",
+      "original_width": "1880px",
+      "original_height": "1880px"
+    }
+  ]
+}

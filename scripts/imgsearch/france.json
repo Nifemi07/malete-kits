@@ -1,0 +1,33 @@
+🚀 Initializing Z-AI SDK...
+🔎 Searching images: "France national football team jersey 2025 product photo"
+✅ Got 3 images
+{
+  "success": true,
+  "query": "France national football team jersey 2025 product photo",
+  "count": 3,
+  "ranked": false,
+  "captioned_count": 0,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/377a62f49a87.jpg",
+      "caption": "",
+      "source": "KICKS CREW",
+      "original_width": "2022px",
+      "original_height": "2022px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/46380844cd04.jpg",
+      "caption": "",
+      "source": "Amazon.in",
+      "original_width": "1320px",
+      "original_height": "1100px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/73a8dc6484af.jpg",
+      "caption": "",
+      "source": "Amazon.ie",
+      "original_width": "2424px",
+      "original_height": "2224px"
+    }
+  ]
+}

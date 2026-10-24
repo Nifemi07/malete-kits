@@ -1,0 +1,33 @@
+🚀 Initializing Z-AI SDK...
+🔎 Searching images: "football jerseys hanging rack dark background sporty store"
+✅ Got 3 images
+{
+  "success": true,
+  "query": "football jerseys hanging rack dark background sporty store",
+  "count": 3,
+  "ranked": false,
+  "captioned_count": 0,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/d7799e35c5bc.jpg",
+      "caption": "",
+      "source": "Amazon.com",
+      "original_width": "1500px",
+      "original_height": "1500px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/ca1a964445be.jpg",
+      "caption": "",
+      "source": "soccerpost.com",
+      "original_width": "1080px",
+      "original_height": "1440px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/604b96c78063.jpg",
+      "caption": "",
+      "source": "InsideHook",
+      "original_width": "1500px",
+      "original_height": "1000px"
+    }
+  ]
+}

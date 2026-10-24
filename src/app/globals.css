@@ -1,0 +1,142 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ---------------------------------------------------------------------------
+   MALÈTE KITS — self-hosted fonts (Archivo body / Oswald display)
+--------------------------------------------------------------------------- */
+@font-face { font-family: 'Archivo'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/archivo-400.woff2') format('woff2'); }
+@font-face { font-family: 'Archivo'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/archivo-500.woff2') format('woff2'); }
+@font-face { font-family: 'Archivo'; font-style: normal; font-weight: 600; font-display: swap; src: url('/fonts/archivo-600.woff2') format('woff2'); }
+@font-face { font-family: 'Archivo'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/archivo-700.woff2') format('woff2'); }
+@font-face { font-family: 'Archivo'; font-style: normal; font-weight: 800; font-display: swap; src: url('/fonts/archivo-800.woff2') format('woff2'); }
+@font-face { font-family: 'Archivo'; font-style: normal; font-weight: 900; font-display: swap; src: url('/fonts/archivo-900.woff2') format('woff2'); }
+@font-face { font-family: 'Oswald'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/oswald-500.woff2') format('woff2'); }
+@font-face { font-family: 'Oswald'; font-style: normal; font-weight: 600; font-display: swap; src: url('/fonts/oswald-600.woff2') format('woff2'); }
+@font-face { font-family: 'Oswald'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/oswald-700.woff2') format('woff2'); }
+
+/* ---------------------------------------------------------------------------
+   Brand tokens
+   ink       #17191C  dark charcoal (background)
+   surface   #1E2126  raised surfaces
+   paper     #F5F3EC  off-white (foreground)
+   pine      #0E4632  deep green
+   pine-2    #165A40  lighter green
+   lime      #B9F73E  accent
+--------------------------------------------------------------------------- */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: 'Archivo', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Oswald', 'Archivo', ui-sans-serif, sans-serif;
+  /* brand aliases usable as tailwind utilities: bg-ink, text-paper, bg-pine, text-lime … */
+  --color-ink: #17191C;
+  --color-surface: #1E2126;
+  --color-surface-2: #25282E;
+  --color-paper: #F5F3EC;
+  --color-pine: #0E4632;
+  --color-pine-2: #165A40;
+  --color-lime: #B9F73E;
+  --color-lime-deep: #8FCC1E;
+}
+
+:root {
+  --radius: 0.55rem;
+  --background: #17191C;
+  --foreground: #F5F3EC;
+  --card: #1E2126;
+  --card-foreground: #F5F3EC;
+  --popover: #1E2126;
+  --popover-foreground: #F5F3EC;
+  --primary: #B9F73E;
+  --primary-foreground: #17191C;
+  --secondary: #0E4632;
+  --secondary-foreground: #F5F3EC;
+  --muted: #25282E;
+  --muted-foreground: #A7ACB4;
+  --accent: #253A2E;
+  --accent-foreground: #D8F7B0;
+  --destructive: #E5484D;
+  --destructive-foreground: #FFFFFF;
+  --border: rgba(245, 243, 236, 0.12);
+  --input: rgba(245, 243, 236, 0.16);
+  --ring: #B9F73E;
+  --sidebar: #1E2126;
+  --sidebar-foreground: #F5F3EC;
+  --sidebar-primary: #B9F73E;
+  --sidebar-primary-foreground: #17191C;
+  --sidebar-accent: #253A2E;
+  --sidebar-accent-foreground: #D8F7B0;
+  --sidebar-border: rgba(245, 243, 236, 0.12);
+  --sidebar-ring: #B9F73E;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: 'ss01' on;
+  }
+  ::selection {
+    background: #B9F73E;
+    color: #17191C;
+  }
+}
+
+/* Slim branded scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #17191C; }
+::-webkit-scrollbar-thumb { background: #2E3237; border-radius: 8px; border: 2px solid #17191C; }
+::-webkit-scrollbar-thumb:hover { background: #0E4632; }
+
+/* Display typography helpers */
+@layer utilities {
+  .font-display { font-family: 'Oswald', 'Archivo', sans-serif; }
+  .text-balance { text-wrap: balance; }
+  .jersey-shadow { box-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.65); }
+  .lime-glow { box-shadow: 0 0 0 1px rgba(185, 247, 62, 0.35), 0 8px 30px -10px rgba(185, 247, 62, 0.35); }
+  .stripe-bg {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgba(185, 247, 62, 0.06) 0px,
+      rgba(185, 247, 62, 0.06) 2px,
+      transparent 2px,
+      transparent 14px
+    );
+  }
+}

@@ -1,0 +1,33 @@
+🚀 Initializing Z-AI SDK...
+🔎 Searching images: "Spain national football team jersey 2025 product photo"
+✅ Got 3 images
+{
+  "success": true,
+  "query": "Spain national football team jersey 2025 product photo",
+  "count": 3,
+  "ranked": false,
+  "captioned_count": 0,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/d42bb1d5762c.jpg",
+      "caption": "",
+      "source": "SoccerBible",
+      "original_width": "1920px",
+      "original_height": "1250px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/9cb6066710bc.jpg",
+      "caption": "",
+      "source": "The Hollywood Reporter",
+      "original_width": "1018px",
+      "original_height": "1018px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/cc3eef7b32d3.jpg",
+      "caption": "",
+      "source": "jerseyzone.pk",
+      "original_width": "1200px",
+      "original_height": "1600px"
+    }
+  ]
+}

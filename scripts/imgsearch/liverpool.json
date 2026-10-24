@@ -1,0 +1,33 @@
+🚀 Initializing Z-AI SDK...
+🔎 Searching images: "Liverpool FC home football jersey 2025 product photo"
+✅ Got 3 images
+{
+  "success": true,
+  "query": "Liverpool FC home football jersey 2025 product photo",
+  "count": 3,
+  "ranked": false,
+  "captioned_count": 0,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/b8833263d198.jpg",
+      "caption": "",
+      "source": "Panini America",
+      "original_width": "1200px",
+      "original_height": "1200px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/0f7f0dc8cf85.jpg",
+      "caption": "",
+      "source": "PriceRunner",
+      "original_width": "1837px",
+      "original_height": "1890px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/ecf5e24c2f07.jpg",
+      "caption": "",
+      "source": "FootyLogos",
+      "original_width": "1600px",
+      "original_height": "1600px"
+    }
+  ]
+}
