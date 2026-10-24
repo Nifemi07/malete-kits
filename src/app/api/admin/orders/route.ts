@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * pageSize,
         take: pageSize,
-        include: { items: { select: { productName: true, size: true, quantity: true, jerseyType: true } } },
+        include: { items: { select: { id: true, productName: true, size: true, quantity: true, jerseyType: true } } },
       }),
       db.order.count({ where }),
     ])

@@ -299,7 +299,7 @@ function OrderDetailDialog({
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-3xl max-h-[90dvh] overflow-y-auto bg-card border-border">
+      <DialogContent aria-describedby={undefined} className="max-w-3xl max-h-[90dvh] overflow-y-auto bg-card border-border">
         <DialogHeader>
           <DialogTitle className="flex flex-wrap items-center gap-3 text-paper">
             <span className="font-display text-2xl tracking-wider text-lime">{order.orderNumber}</span>
