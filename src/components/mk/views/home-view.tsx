@@ -142,7 +142,7 @@ export function HomeView({ onNavigate, onSearch }: { onNavigate: (r: string) => 
               Featured Kits
             </h2>
           </div>
-          <Button variant="ghost" className="text-lime hover:text-lime hover:bg-lime/10 font-bold" onClick={() => onNavigate('#/shop')}>
+          <Button variant="outline" className="border-border text-paper hover:bg-white/5 hover:text-paper font-bold" onClick={() => onNavigate('#/shop')}>
             View all <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
           </Button>
         </div>
@@ -196,7 +196,7 @@ export function HomeView({ onNavigate, onSearch }: { onNavigate: (r: string) => 
               New In
             </h2>
           </div>
-          <Button variant="ghost" className="text-lime hover:text-lime hover:bg-lime/10 font-bold" onClick={() => onNavigate('#/shop?sort=newest')}>
+          <Button variant="outline" className="border-border text-paper hover:bg-white/5 hover:text-paper font-bold" onClick={() => onNavigate('#/shop?sort=newest')}>
             View all <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
           </Button>
         </div>

@@ -62,6 +62,25 @@ export function TrackView({ initialToken, onNavigate }: { initialToken?: string;
     }
   }
 
+  // Order-status badge mirrors the admin semantic map: amber = waiting,
+  // pine = confirmed/in progress, lime = completed, red = cancelled.
+  const statusBadge = (s: string) => {
+    switch (s) {
+      case 'CANCELLED':
+        return 'bg-destructive/80 text-white border-0'
+      case 'COMPLETED':
+        return 'bg-lime text-ink border-0'
+      case 'CONFIRMED':
+        return 'bg-pine-2 text-paper border-0'
+      case 'PROCESSING':
+        return 'bg-pine text-paper border-0'
+      case 'AWAITING_OWNER_CONFIRMATION':
+        return 'bg-amber-400/15 text-amber-200 border border-amber-400/40'
+      default: // READY_FOR_PICKUP, OUT_FOR_DELIVERY
+        return 'border-border text-paper'
+    }
+  }
+
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12">
       <div className="text-center mb-10">
@@ -109,7 +128,7 @@ export function TrackView({ initialToken, onNavigate }: { initialToken?: string;
               <Badge className={`${payBadge(order.paymentStatus)} border-0 font-extrabold`}>
                 Payment: {PAYMENT_STATUS_LABELS[order.paymentStatus] ?? order.paymentStatus}
               </Badge>
-              <Badge variant="outline" className="border-border text-paper">
+              <Badge variant="outline" className={`${statusBadge(order.status)} font-extrabold`}>
                 {ORDER_STATUS_LABELS[order.status] ?? order.status}
               </Badge>
             </div>

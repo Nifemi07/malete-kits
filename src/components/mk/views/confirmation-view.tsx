@@ -186,7 +186,7 @@ export function ConfirmationView({ onNavigate }: { onNavigate: (r: string) => vo
         <Button size="lg" variant="outline" className="border-border text-paper hover:bg-white/5" onClick={() => onNavigate(`#/track?token=${lastOrder?.trackingToken ?? ''}`)}>
           <Package className="mr-2 h-5 w-5" aria-hidden /> Track this order
         </Button>
-        <Button size="lg" variant="ghost" className="text-lime hover:bg-lime/10 font-bold" onClick={() => onNavigate('#/shop')}>
+        <Button size="lg" variant="outline" className="border-border text-paper hover:bg-white/5 font-bold" onClick={() => onNavigate('#/shop')}>
           Continue shopping
         </Button>
       </div>

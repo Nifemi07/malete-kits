@@ -248,7 +248,7 @@ export function ProductView({ slug, onNavigate }: { slug: string; onNavigate: (r
                 })}
             </div>
             {selectedVariant && selectedVariant.stock > 0 && selectedVariant.stock <= 4 && (
-              <p className="mt-2 text-xs font-semibold text-lime">Only {selectedVariant.stock} left — order fast!</p>
+              <p className="mt-2 text-xs font-semibold text-amber-300">Only {selectedVariant.stock} left — order fast!</p>
             )}
           </div>
 
