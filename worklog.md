@@ -79,3 +79,19 @@ Stage Summary:
 - All three approved colour improvements fully applied and verified (badge semantics, lime discipline, photo card standardization).
 - Store contacts now live: WhatsApp 08089404255 (links use wa.me/2348089404255), support email nifemionawola@gmail.com.
 - Items #4 (WhatsApp-green isolation) and #5 (warm promo accent) remain NOT implemented — not approved by user.
+
+---
+Task ID: 4
+Agent: Main agent (Z.ai)
+Task: Recommendation step #1 — add the owner's real bank details to store settings (payment config was intentionally empty).
+
+Work Log:
+- Confirmed field names in StoreSettings (bankName, accountName, accountNumber, acceptedPaymentMethods, cashInstructions, paymentInstructions) and the security model: bank details never exposed via /api/meta (only hasPaymentDetails flag); they appear only in the customer's order-confirmation email payment block.
+- Saved via Prisma: OPay / Onawola Oluwanifemi Anuoluwapo / 9134980059; methods "Bank transfer · Cash on pickup or delivery"; payment + cash instructions written.
+- Verified /api/meta now returns hasPaymentDetails: true.
+- Built scripts/preview-payment-email.ts rendering the real buildOrderConfirmationEmail with the saved bank block; screenshot verified (.zscripts/payment-email-preview*.png): OPay block + "pay ONLY after we confirm availability" amber warning renders correctly.
+- Polish fix in src/lib/email.ts: customer phone now displayed in local format via displayPhone() (0808 940 4255 instead of 2348089404255).
+- bun run lint clean.
+
+Stage Summary:
+- Payment configuration complete: customers' confirmation emails now include the owner's OPay details with anti-scam guidance. Step #1 of the recommendation list done; next step #2 Brevo email setup.

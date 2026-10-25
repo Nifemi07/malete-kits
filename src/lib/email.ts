@@ -6,6 +6,7 @@
 // If Brevo credentials are absent the send fails gracefully and the failure is
 // recorded in NotificationLog so the owner can retry from the dashboard.
 // ---------------------------------------------------------------------------
+import { displayPhone } from './validation'
 
 export interface OrderEmailData {
   orderNumber: string
@@ -84,7 +85,7 @@ export function buildOrderConfirmationEmail(order: OrderEmailData, paymentBlockH
       <p style="margin:0 0 20px;color:#4A4F55;font-size:14px;line-height:1.6;">
         Thanks for shopping with MALÈTE KITS. Your order <strong style="color:${GREEN};">${order.orderNumber}</strong> has been received
         and is now <strong>awaiting availability confirmation</strong> from our team. We will contact you on
-        <strong>${escapeHtml(order.customerPhone)}</strong> / WhatsApp shortly to confirm your jerseys and share payment details.
+        <strong>${escapeHtml(displayPhone(order.customerPhone))}</strong> / WhatsApp shortly to confirm your jerseys and share payment details.
         <br/><br/>
         <em style="color:#8A4B00;background:#FFF4E0;padding:6px 10px;border-left:3px solid #F5A524;display:block;font-size:13px;">
           Please do NOT send payment yet — wait for our availability confirmation and payment instructions.
