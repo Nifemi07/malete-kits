@@ -59,3 +59,23 @@ Work Log:
 
 Stage Summary:
 - Colour system now: charcoal/paper base, pine for in-progress states, lime strictly for primary CTAs + key numbers + BESTSELLER, amber for waiting/payment-pending states, red only for cancelled/failed, flame only for promos, WhatsApp green only on WhatsApp buttons. All WCAG AA+ on dark backgrounds.
+
+---
+Task ID: 3
+Agent: Main agent (Z.ai)
+Task: Apply approved colour improvements (#1 badge semantics, #2 lime discipline, #3 photo card treatment — most were already in code from the prior pass; completed the remaining gaps) and update store contact details to the owner's real WhatsApp number + email.
+
+Work Log:
+- Audited badge/status components: admin orders-tab STATUS_BADGE + PAY_BADGE maps and notifications-tab STATUS_STYLE already followed the approved semantics (amber=waiting, red=cancelled/failed, lime=paid/completed, pine=confirmed/processing).
+- Found one gap on the storefront track page: order-status badge was neutral outline for all statuses. Added statusBadge() mirroring the admin map (CANCELLED→red, COMPLETED→lime, CONFIRMED→pine-2, PROCESSING→pine, AWAITING→amber) in track-view.tsx.
+- Lime discipline: demoted 3 secondary ghost lime buttons to outline (home-view "View all" ×2, confirmation-view "Continue shopping"); changed product-view low-stock warning from text-lime to text-amber-300 (attention semantics). Hero/admin keep exactly one lime primary CTA per screen.
+- Photo cards: verified product-card.tsx already implements the approved treatment (uniform aspect-[4/5], bottom ink gradient fading into card, subtle inner ring); visually confirmed on shop grid.
+- Updated StoreSettings singleton via Prisma: whatsappNumber 08012345678 (placeholder) → 2348089404255 (user's 08089404255 normalized to international format required by wa.me), supportEmail → nifemionawola@gmail.com.
+- Verified live: /api/meta returns new values; wa.me links on contact page point to wa.me/2348089404255 after reload (React meta context refetches on app mount); footer shows nifemionawola@gmail.com.
+- Browser-verified badges via tracking tokens: MK-1030 (Payment: Paid → lime, Completed → lime), MK-1031 (Payment: Unpaid → amber, Cancelled → red). Screenshots in .zscripts/colour-*.png.
+- bun run lint clean; zero browser console errors/warnings.
+
+Stage Summary:
+- All three approved colour improvements fully applied and verified (badge semantics, lime discipline, photo card standardization).
+- Store contacts now live: WhatsApp 08089404255 (links use wa.me/2348089404255), support email nifemionawola@gmail.com.
+- Items #4 (WhatsApp-green isolation) and #5 (warm promo accent) remain NOT implemented — not approved by user.
