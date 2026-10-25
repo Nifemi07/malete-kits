@@ -43,3 +43,19 @@ Stage Summary:
 - System is complete, lint-clean, API-verified, and browser-verified on desktop + mobile; all fixes confirmed effective.
 - Deliverables: runnable Next.js 16 app (SPA hash-router storefront + admin), Prisma/SQLite DB seeded (27 products, 162 variants, admin, settings with EMPTY bank details by design), README.md, .env.example, TESTING-CHECKLIST.md, scripts/api-smoke-test.sh.
 - To go live: set AUTH_SECRET + ADMIN_PASSWORD, add Brevo keys for auto-emails, add Meta Cloud API keys for automated WhatsApp (Mode B), configure bank details in Admin → Settings (nothing fabricated by default), switch DATABASE_URL to PostgreSQL if desired (schema is portable).
+
+---
+Task ID: 3
+Agent: Main agent (Z.ai)
+Task: Implement recommended colour-combination improvements (5 changes).
+
+Work Log:
+- globals.css: added flame tokens (#FF8A3D / #E06A1B) documented as promo-only accent; added .stripe-flame utility; updated brand-token comment to codify "lime = primary CTAs + key numbers only".
+- Status badge semantics: admin orders-tab STATUS_BADGE replaced off-palette purple/cyan/sky workflow badges with brand-family progression (amber awaiting → pine-2 confirmed → pine processing → paper ready → lime-deep out-for-delivery → lime completed → red cancelled only); PAY_BADGE UNPAID moved from red to amber outline, PAYMENT_PENDING solid amber; track-view customer UNPAID badge likewise amber ("normal waiting state", red reserved for cancelled/failed).
+- Product card treatment: image area gets inset ring + bottom ink gradient to unify varied photo backdrops; NEW/PRE_ORDER/RESTOCK + Popular badges moved to neutral glass style (ink/85 + white/10 border + backdrop-blur), BESTSELLER kept as the single lime pop; team-name label changed lime/90 → paper/55 on product cards and cart lines.
+- Promo banner (home): rebuilt on warm flame gradient (from #3B1D09 via #271505 to ink) with flame pill, flame promo code, flame stripes; lime CTA retained inside banner to keep CTA language consistent.
+- Verified WhatsApp green (#25D366) already isolated to WhatsApp buttons only.
+- Verification: lint clean; browser-verified — flame promo banner renders with lime CTA; product grid calmer with glass badges; track page lime PAID badge correct; admin table shows amber Unpaid/Awaiting, pine Confirmed, lime Paid/Completed, red Cancelled (red appears exactly once, on the cancelled order).
+
+Stage Summary:
+- Colour system now: charcoal/paper base, pine for in-progress states, lime strictly for primary CTAs + key numbers + BESTSELLER, amber for waiting/payment-pending states, red only for cancelled/failed, flame only for promos, WhatsApp green only on WhatsApp buttons. All WCAG AA+ on dark backgrounds.

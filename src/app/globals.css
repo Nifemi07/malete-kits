@@ -23,7 +23,8 @@
    paper     #F5F3EC  off-white (foreground)
    pine      #0E4632  deep green
    pine-2    #165A40  lighter green
-   lime      #B9F73E  accent
+   lime      #B9F73E  accent (primary CTAs + key numbers only)
+   flame     #FF8A3D  promo/urgency accent (promotions ONLY, never nav)
 --------------------------------------------------------------------------- */
 @theme inline {
   --color-background: var(--background);
@@ -68,6 +69,8 @@
   --color-pine-2: #165A40;
   --color-lime: #B9F73E;
   --color-lime-deep: #8FCC1E;
+  --color-flame: #FF8A3D;
+  --color-flame-deep: #E06A1B;
 }
 
 :root {
@@ -135,6 +138,15 @@
       -45deg,
       rgba(185, 247, 62, 0.06) 0px,
       rgba(185, 247, 62, 0.06) 2px,
+      transparent 2px,
+      transparent 14px
+    );
+  }
+  .stripe-flame {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgba(255, 138, 61, 0.07) 0px,
+      rgba(255, 138, 61, 0.07) 2px,
       transparent 2px,
       transparent 14px
     );

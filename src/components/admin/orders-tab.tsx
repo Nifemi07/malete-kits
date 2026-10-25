@@ -44,16 +44,17 @@ type AdminOrder = OrderView & {
 const STATUS_BADGE: Record<string, string> = {
   AWAITING_OWNER_CONFIRMATION: 'bg-amber-400/90 text-ink border-0',
   CONFIRMED: 'bg-pine-2 text-paper border-0',
-  PROCESSING: 'bg-purple-500/80 text-white border-0',
-  READY_FOR_PICKUP: 'bg-cyan-500/80 text-ink border-0',
-  OUT_FOR_DELIVERY: 'bg-sky-500/80 text-ink border-0',
+  PROCESSING: 'bg-pine text-paper border-0',
+  READY_FOR_PICKUP: 'bg-paper/90 text-ink border-0',
+  OUT_FOR_DELIVERY: 'bg-lime-deep text-ink border-0',
   COMPLETED: 'bg-lime text-ink border-0',
   CANCELLED: 'bg-destructive/80 text-white border-0',
 }
 
+// Amber = attention/normal-waiting states; red is reserved for CANCELLED/FAILED.
 const PAY_BADGE: Record<string, string> = {
-  UNPAID: 'bg-destructive/15 text-red-300 border-destructive/40',
-  PAYMENT_PENDING: 'bg-amber-400/15 text-amber-300 border-amber-400/40',
+  UNPAID: 'bg-amber-400/10 text-amber-200 border-amber-400/40',
+  PAYMENT_PENDING: 'bg-amber-400/90 text-ink border-0',
   PAID: 'bg-lime/15 text-lime border-lime/40',
   REFUNDED: 'bg-paper/10 text-paper border-paper/30',
 }

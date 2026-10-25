@@ -210,15 +210,15 @@ export function HomeView({ onNavigate, onSearch }: { onNavigate: (r: string) => 
       {/* ---------------------------- PROMO BANNER --------------------------- */}
       {store.promoCode && store.promoPercent > 0 && (
         <section className="mx-auto max-w-7xl px-4 sm:px-6 pb-16" aria-label="Promotion">
-          <div className="relative overflow-hidden rounded-2xl border border-lime/30 bg-gradient-to-r from-pine via-pine to-ink p-8 sm:p-10">
-            <div className="absolute inset-0 stripe-bg" aria-hidden />
+          <div className="relative overflow-hidden rounded-2xl border border-flame/40 bg-gradient-to-r from-[#3B1D09] via-[#271505] to-ink p-8 sm:p-10">
+            <div className="absolute inset-0 stripe-flame" aria-hidden />
             <div className="relative flex flex-col sm:flex-row sm:items-center gap-6 justify-between">
               <div>
-                <div className="inline-flex items-center gap-2 rounded-full bg-lime px-3 py-1 text-xs font-extrabold tracking-widest uppercase text-ink">
+                <div className="inline-flex items-center gap-2 rounded-full bg-flame px-3 py-1 text-xs font-extrabold tracking-widest uppercase text-ink">
                   <BadgeCheck className="h-3.5 w-3.5" aria-hidden /> Student promo
                 </div>
                 <div className="mt-3 font-display text-3xl sm:text-4xl font-bold uppercase text-paper">
-                  {store.promoPercent}% off with code <span className="text-lime">{store.promoCode}</span>
+                  {store.promoPercent}% off with code <span className="text-flame">{store.promoCode}</span>
                 </div>
                 <p className="mt-2 text-sm text-paper/75 max-w-lg">
                   KWASU students&apos; welcome offer — apply the code at checkout. Applies to the jersey subtotal

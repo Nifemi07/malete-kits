@@ -6,10 +6,12 @@ import { Badge } from '@/components/ui/badge'
 import { formatNaira, KIT_LABELS, type ProductListItem } from '@/lib/client-utils'
 
 const BADGE_STYLES: Record<string, string> = {
+  // Glass style keeps badges legible on any photo background; BESTSELLER is
+  // intentionally the single lime pop per card (60-30-10 accent discipline).
   BESTSELLER: 'bg-lime text-ink',
-  NEW: 'bg-pine text-paper',
-  PRE_ORDER: 'bg-paper text-ink',
-  RESTOCK: 'bg-lime-deep text-ink',
+  NEW: 'bg-ink/85 text-paper border border-white/10 backdrop-blur',
+  PRE_ORDER: 'bg-ink/85 text-paper border border-white/10 backdrop-blur',
+  RESTOCK: 'bg-ink/85 text-paper border border-white/10 backdrop-blur',
 }
 
 export function ProductCard({ product, onOpen }: { product: ProductListItem; onOpen?: () => void }) {
@@ -23,9 +25,8 @@ export function ProductCard({ product, onOpen }: { product: ProductListItem; onO
       className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:border-lime/50 hover:shadow-[0_20px_50px_-20px_rgba(185,247,62,0.15)] focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
       aria-label={`${product.name} — ${formatNaira(product.displayPrice)}`}
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-surface">
+      <div className="relative aspect-[4/5] overflow-hidden bg-surface ring-1 ring-inset ring-white/5">
         {product.imageUrl ? (
-           
           <img
             src={product.imageUrl}
             alt={product.name}
@@ -37,6 +38,9 @@ export function ProductCard({ product, onOpen }: { product: ProductListItem; onO
             <Shirt className="h-16 w-16" aria-hidden />
           </div>
         )}
+        {/* Unifies varied photo backdrops into the card surface */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ink/70 via-ink/25 to-transparent" aria-hidden />
+        <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/20" aria-hidden />
 
         <div className="absolute left-3 top-3 flex flex-col gap-1.5">
           {product.badge && BADGE_STYLES[product.badge] && (
@@ -45,7 +49,7 @@ export function ProductCard({ product, onOpen }: { product: ProductListItem; onO
             </span>
           )}
           {product.featured && !product.badge && (
-            <span className="rounded-md bg-ink/85 px-2 py-1 text-[10px] font-extrabold tracking-widest uppercase text-lime backdrop-blur">
+            <span className="rounded-md bg-ink/85 px-2 py-1 text-[10px] font-extrabold tracking-widest uppercase text-paper border border-white/10 backdrop-blur">
               Popular
             </span>
           )}
@@ -65,7 +69,7 @@ export function ProductCard({ product, onOpen }: { product: ProductListItem; onO
       </div>
 
       <div className="flex flex-1 flex-col gap-1 p-4">
-        <div className="text-[11px] font-bold tracking-widest uppercase text-lime/90">{product.teamName}</div>
+        <div className="text-[11px] font-bold tracking-widest uppercase text-paper/55">{product.teamName}</div>
         <div className="text-sm font-semibold text-paper leading-snug">{product.name}</div>
         <div className="mt-auto flex items-baseline justify-between pt-2">
           <div>

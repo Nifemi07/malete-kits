@@ -57,7 +57,8 @@ export function TrackView({ initialToken, onNavigate }: { initialToken?: string;
       case 'REFUNDED':
         return 'bg-paper text-ink'
       default:
-        return 'bg-destructive/90 text-white'
+        // UNPAID is a normal state for a fresh order — amber, not red.
+        return 'bg-amber-400/15 text-amber-200 border border-amber-400/40'
     }
   }
 
