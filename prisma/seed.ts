@@ -116,19 +116,33 @@ async function main() {
   console.log(`✓ Admin user: ${adminEmail} ${process.env.ADMIN_PASSWORD ? '(password from ADMIN_PASSWORD env)' : '(default password — see README, change after first login)'}`)
 
   // 2) Store settings ----------------------------------------------------------
+  // One-time PRODUCTION overrides — passed as env vars only when seeding a fresh
+  // production database (keeps real store identity OUT of the repository).
+  // Local dev runs without them and keeps the placeholders below.
+  const bankName = process.env.SEED_BANK_NAME || null
+  const accountName = process.env.SEED_ACCOUNT_NAME || null
+  const accountNumber = process.env.SEED_ACCOUNT_NUMBER || null
+  const hasBank = !!(bankName && accountName && accountNumber)
   const settings = await db.storeSettings.upsert({
     where: { id: 'singleton' },
     update: {},
     create: {
       id: 'singleton',
-      whatsappNumber: process.env.OWNER_WHATSAPP_NUMBER || '08012345678', // PLACEHOLDER — owner must update in Admin → Settings
-      supportEmail: 'hello@maletekits.com',
+      whatsappNumber: process.env.SEED_WHATSAPP_NUMBER || process.env.OWNER_WHATSAPP_NUMBER || '08012345678', // PLACEHOLDER — owner must update in Admin → Settings
+      supportEmail: process.env.SEED_SUPPORT_EMAIL || 'hello@maletekits.com',
       storeAddress: 'KWASU Main Campus Area, Malete, Kwara State',
       openingHours: 'Mon–Sat, 9:00am – 8:00pm',
       announcement: 'New-season 25/26 jerseys now available — order today, pick up in Malete!',
-      acceptedPaymentMethods: 'Bank transfer, Cash on confirmation',
-      cashInstructions: 'Cash payments are collected on pickup/delivery in Malete. Always collect a receipt.',
-      paymentInstructions: 'Pay only AFTER the owner confirms your order. Send your receipt on WhatsApp for verification.',
+      bankName,
+      accountName,
+      accountNumber,
+      acceptedPaymentMethods: process.env.SEED_PAYMENT_METHODS || (hasBank ? 'Bank transfer · Cash on pickup or delivery' : 'Bank transfer, Cash on confirmation'),
+      cashInstructions: hasBank
+        ? 'Pay cash at pickup or on delivery. You will receive a confirmation receipt.'
+        : 'Cash payments are collected on pickup/delivery in Malete. Always collect a receipt.',
+      paymentInstructions: hasBank
+        ? `Transfer the exact total to the ${bankName} account — ${accountName}, ${accountNumber}. We verify every payment personally before your order is marked PAID — keep your transfer reference. Send your payment ONLY after we confirm availability.`
+        : 'Pay only AFTER the owner confirms your order. Send your receipt on WhatsApp for verification.',
       deliveryFeeMalete: 1000,
       deliveryFeeOther: 2500,
       customizationFee: 2000,
@@ -138,7 +152,7 @@ async function main() {
       promoMaxNaira: 2000,
     },
   })
-  console.log('✓ Store settings (bank details intentionally EMPTY — configure in Admin → Settings)')
+  console.log(hasBank ? `✓ Store settings (bank details seeded: ${bankName})` : '✓ Store settings (bank details intentionally EMPTY — configure in Admin → Settings)')
 
   // 3) Order counter (first order will be MK-1024) ------------------------------
   await db.counter.upsert({

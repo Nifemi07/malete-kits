@@ -1,0 +1,292 @@
+// MALÈTE KITS — Football Jersey E-Commerce Schema (PRODUCTION / PostgreSQL)
+// Order-management system with manual payment workflow (no online payment gateway).
+//
+// This file is identical to prisma/schema.prisma except the datasource provider.
+// It is used by:
+//  - Vercel builds        → `prisma generate --schema=prisma/schema.prod.prisma` (see vercel.json)
+//  - scripts/deploy-db.sh → `prisma db push` + seed against the production database
+// Local sandbox development keeps using prisma/schema.prisma (SQLite).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// ADMIN
+// ---------------------------------------------------------------------------
+
+model AdminUser {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String // scrypt hash: scrypt$N$r$p$salt$hash
+  name          String
+  role          String    @default("OWNER") // OWNER | STAFF
+  isActive      Boolean   @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  paymentRecords  PaymentRecord[]
+  inventoryLogs   InventoryLog[]
+}
+
+// ---------------------------------------------------------------------------
+// CATALOG
+// ---------------------------------------------------------------------------
+
+model Category {
+  id        String    @id @default(cuid())
+  slug      String    @unique
+  name      String
+  type      String // CLUB | NATIONAL
+  sortOrder Int       @default(0)
+  products  Product[]
+}
+
+model Product {
+  id                     String    @id @default(cuid())
+  slug                   String    @unique
+  name                   String // e.g. "Real Madrid Home Shirt 25/26"
+  teamName               String
+  season                 String // "25/26"
+  kitType                String // HOME | AWAY | THIRD
+  league                 String? // "La Liga", "Premier League", "AFCON Qualifiers"...
+  categoryId             String
+  category               Category  @relation(fields: [categoryId], references: [id])
+  description            String
+  basePrice              Int // naira — fan version
+  playerVersionAdj       Int       @default(4500) // extra naira for player version
+  customizationAvailable Boolean   @default(true)
+  badge                  String? // NEW | BESTSELLER | PRE_ORDER | RESTOCK
+  featured               Boolean   @default(false)
+  imageUrl               String?
+  active                 Boolean   @default(true)
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+  variants               ProductVariant[]
+  orderItems             OrderItem[]
+
+  @@index([teamName])
+  @@index([season])
+  @@index([kitType])
+}
+
+model ProductVariant {
+  id            String           @id @default(cuid())
+  productId     String
+  product       Product          @relation(fields: [productId], references: [id])
+  size          String // XS | S | M | L | XL | XXL
+  sku           String           @unique
+  price         Int? // optional override of product.basePrice
+  stock         Int              @default(0)
+  active        Boolean          @default(true)
+  orderItems    OrderItem[]
+  inventoryLogs InventoryLog[]
+
+  @@unique([productId, size])
+  @@index([productId])
+}
+
+model InventoryLog {
+  id        String          @id @default(cuid())
+  variantId String
+  variant   ProductVariant  @relation(fields: [variantId], references: [id])
+  delta     Int
+  reason    String // ORDER_CREATED | ORDER_CANCELLED | MANUAL_ADJUST | RESTOCK | SEED
+  note      String?
+  adminId   String?
+  admin     AdminUser?      @relation(fields: [adminId], references: [id])
+  createdAt DateTime        @default(now())
+
+  @@index([variantId])
+}
+
+// ---------------------------------------------------------------------------
+// CUSTOMERS & ORDERS
+// ---------------------------------------------------------------------------
+
+model Customer {
+  id        String  @id @default(cuid())
+  name      String
+  email     String
+  phone     String  @unique
+  createdAt DateTime @default(now())
+  orders    Order[]
+
+  @@index([email])
+}
+
+model Order {
+  id                String    @id @default(cuid())
+  orderNumber       String    @unique // MK-1024
+  idempotencyKey    String    @unique // client-generated UUID, prevents duplicates
+  customerId        String?
+  customer          Customer? @relation(fields: [customerId], references: [id])
+
+  // Contact snapshot (denormalized so orders survive customer edits)
+  customerName  String
+  customerEmail String
+  customerPhone String
+
+  // Fulfilment
+  fulfillmentMethod String  // PICKUP | DELIVERY
+  deliveryZone      String? // MALETE | OTHER (null for pickup)
+  address           String? // hostel / lodge / delivery address
+  landmark          String?
+  instructions      String?
+
+  // Money (all naira integers)
+  subtotal         Int
+  customizationFee Int
+  deliveryFee      Int
+  discount         Int
+  promoCode        String?
+  total            Int
+
+  paymentStatus String    @default("UNPAID") // UNPAID | PAYMENT_PENDING | PAID | REFUNDED
+  status        String    @default("AWAITING_OWNER_CONFIRMATION")
+  // AWAITING_OWNER_CONFIRMATION | CONFIRMED | PROCESSING | READY_FOR_PICKUP
+  // | OUT_FOR_DELIVERY | COMPLETED | CANCELLED
+
+  internalNotes String?
+  trackingToken String    @unique // secure random token for direct tracking link
+  cancelReason  String?
+  cancelledAt   DateTime?
+  paidAt        DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items            OrderItem[]
+  statusHistory    OrderStatusHistory[]
+  paymentRecords   PaymentRecord[]
+  notificationLogs NotificationLog[]
+
+  @@index([customerPhone])
+  @@index([customerEmail])
+  @@index([status])
+  @@index([paymentStatus])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id               String          @id @default(cuid())
+  orderId          String
+  order            Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId        String?
+  product          Product?        @relation(fields: [productId], references: [id])
+  variantId        String?
+  variant          ProductVariant? @relation(fields: [variantId], references: [id])
+
+  // Snapshot (order survives product edits)
+  productName String
+  teamName    String
+  season      String
+  kitType     String
+  league      String?
+  imageUrl    String?
+  jerseyType  String // FAN | PLAYER
+  size        String
+  quantity    Int
+  unitPrice   Int // per-unit incl. jersey-type adjustment
+  // Customization
+  custPlayerName   String?
+  custPlayerNumber Int?
+  customizationFee Int     @default(0)
+  lineTotal        Int
+}
+
+model OrderStatusHistory {
+  id         String    @id @default(cuid())
+  orderId    String
+  order      Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  fromStatus String?
+  toStatus   String
+  note       String?
+  changedBy  String // admin email, or SYSTEM
+  createdAt  DateTime  @default(now())
+
+  @@index([orderId])
+}
+
+model PaymentRecord {
+  id             String    @id @default(cuid())
+  orderId        String
+  order          Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  paymentStatus  String // UNPAID | PAYMENT_PENDING | PAID | REFUNDED
+  previousStatus String?
+  method         String? // BANK_TRANSFER | CASH
+  amount         Int?
+  reference      String? // transfer reference / receipt number
+  note           String?
+  recordedBy     String? // admin display (email)
+  adminId        String?
+  admin          AdminUser? @relation(fields: [adminId], references: [id])
+  createdAt      DateTime  @default(now())
+
+  @@index([orderId])
+}
+
+model NotificationLog {
+  id        String    @id @default(cuid())
+  orderId   String
+  order     Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  channel   String // EMAIL | WHATSAPP
+  recipient String
+  status    String    @default("PENDING") // PENDING | SENT | FAILED
+  provider  String? // BREVO | META_CLOUD_API | WA_CLICK_TO_CHAT
+  attempts  Int       @default(0)
+  error     String?
+  payload   String? // JSON snapshot of message/content
+  sentAt    DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([orderId])
+  @@index([status])
+}
+
+// ---------------------------------------------------------------------------
+// SETTINGS & INFRA
+// ---------------------------------------------------------------------------
+
+model StoreSettings {
+  id             String   @id @default("singleton")
+  storeName      String   @default("MALÈTE KITS")
+  whatsappNumber String // owner WhatsApp, intl format e.g. 2348012345678
+  supportEmail   String?
+  storeAddress   String?
+  openingHours   String?
+  announcement   String?
+
+  // Payment configuration — intentionally blank until the OWNER configures it.
+  bankName               String?
+  accountName            String?
+  accountNumber          String?
+  acceptedPaymentMethods String? // "Bank transfer, Cash"
+  cashInstructions       String?
+  paymentInstructions    String?
+
+  // Fees (naira)
+  deliveryFeeMalete Int @default(1000)
+  deliveryFeeOther  Int @default(2500)
+  customizationFee  Int @default(2000)
+  pickupFee         Int @default(0)
+
+  // Promo (server-validated discount)
+  promoCode     String? // e.g. KWASU10
+  promoPercent  Int     @default(0)
+  promoMaxNaira Int     @default(3000)
+
+  updatedAt DateTime @updatedAt
+}
+
+// Atomic counter for sequential order numbers (MK-1024, MK-1025, ...)
+model Counter {
+  id    String @id // "ORDER"
+  value Int
+}
