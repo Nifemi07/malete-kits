@@ -1,6 +1,6 @@
 import { getSessionAdmin } from '@/lib/auth'
 import { ok } from '@/lib/api-helpers'
-import { isEmailConfigured } from '@/lib/email'
+import { activeEmailProvider, isEmailConfigured } from '@/lib/email'
 import { isAutomatedWhatsAppConfigured } from '@/lib/whatsapp'
 
 export const dynamic = 'force-dynamic'
@@ -13,9 +13,9 @@ export async function GET() {
     admin,
     integrations: {
       email: {
-        provider: 'BREVO',
+        provider: activeEmailProvider(),
         configured: isEmailConfigured(),
-        hint: 'Set BREVO_API_KEY and BREVO_SENDER_EMAIL in .env to enable automatic emails.',
+        hint: 'Set BREVO_API_KEY or SMTP2GO_API_KEY (+ sender email) in .env to enable automatic emails.',
       },
       whatsapp: {
         provider: 'META_CLOUD_API',

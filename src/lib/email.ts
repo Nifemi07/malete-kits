@@ -156,7 +156,26 @@ function escapeHtml(s: string): string {
 // --- Brevo sender ------------------------------------------------------------
 
 export function isEmailConfigured(): boolean {
-  return Boolean(process.env.BREVO_API_KEY && process.env.BREVO_SENDER_EMAIL)
+  const brevo = Boolean(process.env.BREVO_API_KEY && process.env.BREVO_SENDER_EMAIL)
+  const smtp2go = Boolean(process.env.SMTP2GO_API_KEY && emailSenderAddress())
+  return brevo || smtp2go
+}
+
+/** First verified sender address across providers (used by SMTP2GO). */
+function emailSenderAddress(): string | undefined {
+  return (
+    process.env.SMTP2GO_SENDER_EMAIL ||
+    process.env.BREVO_SENDER_EMAIL ||
+    process.env.OWNER_SUPPORT_EMAIL ||
+    undefined
+  )
+}
+
+/** Human-readable active provider for dashboard labels. */
+export function activeEmailProvider(): 'BREVO' | 'SMTP2GO' | 'NONE' {
+  if (process.env.BREVO_API_KEY && process.env.BREVO_SENDER_EMAIL) return 'BREVO'
+  if (process.env.SMTP2GO_API_KEY) return 'SMTP2GO'
+  return 'NONE'
 }
 
 export interface EmailSendResult {
@@ -195,5 +214,68 @@ export async function sendEmailViaBrevo(to: string, toName: string, subject: str
     return { ok: true, provider: 'BREVO' }
   } catch (err) {
     return { ok: false, provider: 'BREVO', error: `Email send failed: ${(err as Error).message}` }
+  }
+}
+
+/** SMTP2GO free tier (1,000 emails/month) — no card, no domain required. */
+export async function sendEmailViaSmtp2go(to: string, toName: string, subject: string, html: string): Promise<EmailSendResult> {
+  const apiKey = process.env.SMTP2GO_API_KEY
+  const senderEmail = emailSenderAddress()
+  const senderName = process.env.BREVO_SENDER_NAME || 'MALÈTE KITS'
+  if (!apiKey || !senderEmail) {
+    return {
+      ok: false,
+      provider: 'SMTP2GO',
+      error: 'SMTP2GO not fully configured — set SMTP2GO_API_KEY and SMTP2GO_SENDER_EMAIL (the email you verified in SMTP2GO).',
+    }
+  }
+  try {
+    const res = await fetch('https://api.smtp2go.com/v3/email/send', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        api_key: apiKey,
+        to: [to],
+        sender: `${senderName} <${senderEmail}>`,
+        subject,
+        html_body: html,
+      }),
+      signal: AbortSignal.timeout(15000),
+    })
+    const body = await res.text().catch(() => '')
+    if (!res.ok) {
+      return { ok: false, provider: 'SMTP2GO', error: `SMTP2GO error ${res.status}: ${body.slice(0, 300)}` }
+    }
+    // SMTP2GO returns HTTP 200 with an error object inside `data` on rejection
+    // (e.g. sender not verified) — surface it instead of falsely reporting SENT.
+    try {
+      const json = JSON.parse(body) as { data?: { error?: string; error_code?: string | number } }
+      if (json?.data?.error) {
+        return { ok: false, provider: 'SMTP2GO', error: `SMTP2GO ${json.data.error_code ?? ''}: ${json.data.error}`.slice(0, 300) }
+      }
+    } catch {
+      // non-JSON success body — treat as delivered
+    }
+    return { ok: true, provider: 'SMTP2GO' }
+  } catch (err) {
+    return { ok: false, provider: 'SMTP2GO', error: `Email send failed: ${(err as Error).message}` }
+  }
+}
+
+/**
+ * Provider-agnostic dispatcher. Brevo wins if configured; otherwise SMTP2GO.
+ * The order is NEVER lost either way — failures are logged for dashboard retry.
+ */
+export async function sendEmail(to: string, toName: string, subject: string, html: string): Promise<EmailSendResult> {
+  if (process.env.BREVO_API_KEY && process.env.BREVO_SENDER_EMAIL) {
+    return sendEmailViaBrevo(to, toName, subject, html)
+  }
+  if (process.env.SMTP2GO_API_KEY) {
+    return sendEmailViaSmtp2go(to, toName, subject, html)
+  }
+  return {
+    ok: false,
+    provider: 'NONE',
+    error: 'Email provider not configured — set BREVO_API_KEY or SMTP2GO_API_KEY (plus a verified sender email). The order is safe; retry from the admin dashboard once configured.',
   }
 }

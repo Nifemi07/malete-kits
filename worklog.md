@@ -95,3 +95,17 @@ Work Log:
 
 Stage Summary:
 - Payment configuration complete: customers' confirmation emails now include the owner's OPay details with anti-scam guidance. Step #1 of the recommendation list done; next step #2 Brevo email setup.
+
+---
+Task ID: 5
+Agent: Main agent (Z.ai)
+Task: Recommendation step #2 (email provider) — user hit walls on both Brevo (payment wall at signup) and Gmail App Password ("setting not available" — Google-blocked). Pivoted to SMTP2GO (free 1,000 emails/month, no card, no domain) and wired provider-agnostic email dispatch into the codebase.
+
+Work Log:
+- Refactored src/lib/email.ts: added sendEmailViaSmtp2go (SMTP2GO /v3/email/send, surfaces in-200 data.error instead of false SENT), emailSenderAddress() helper (SMTP2GO_SENDER_EMAIL → BREVO_SENDER_EMAIL → OWNER_SUPPORT_EMAIL), activeEmailProvider() label helper, and sendEmail() dispatcher (Brevo wins if both configured, else SMTP2GO, else honest NONE error).
+- Updated isEmailConfigured() to cover both providers; notifications.ts now imports/uses sendEmail; PENDING NotificationLog provider labels are dynamic (BREVO/SMTP2GO); admin /api/admin/me integrations.email.provider uses activeEmailProvider() with updated hint.
+- Recreated missing .env.example documenting both email options, auth, DB, WhatsApp Mode B notes, and the no-payment-gateway policy.
+- bun run lint clean; dev server healthy (HMR applies lib changes).
+
+Stage Summary:
+- Site now supports Brevo OR SMTP2GO with zero code changes once env keys are set; fail-safe retry contract unchanged. Awaiting user's SMTP2GO API key to configure + send test email. Fallback remains Plan C: launch WhatsApp-only (site fully works without email).

@@ -15,7 +15,7 @@ import { db } from './db'
 import { getSettings } from './settings'
 import {
   buildOrderConfirmationEmail,
-  sendEmailViaBrevo,
+  sendEmail,
   isEmailConfigured,
 } from './email'
 import {
@@ -66,11 +66,11 @@ export async function dispatchOrderNotifications(orderId: string): Promise<void>
         channel: 'EMAIL',
         recipient: order.customerEmail,
         status: 'PENDING',
-        provider: isEmailConfigured() ? 'BREVO' : null,
+        provider: isEmailConfigured() ? (process.env.BREVO_API_KEY ? 'BREVO' : 'SMTP2GO') : null,
         payload: JSON.stringify({ subject: `Order ${order.orderNumber} received — MALÈTE KITS` }),
       },
     })
-    const emailResult = await sendEmailViaBrevo(
+    const emailResult = await sendEmail(
       order.customerEmail,
       order.customerName,
       `Order ${order.orderNumber} received — awaiting confirmation | MALÈTE KITS`,
@@ -133,7 +133,7 @@ export async function retryNotification(logId: string): Promise<{ ok: boolean; e
   const settings = await getSettings()
 
   if (log.channel === 'EMAIL') {
-    const result = await sendEmailViaBrevo(
+    const result = await sendEmail(
       log.order.customerEmail,
       log.order.customerName,
       `Order ${log.order.orderNumber} received — awaiting confirmation | MALÈTE KITS`,
@@ -183,7 +183,7 @@ export async function resendConfirmationEmail(orderId: string): Promise<{ ok: bo
       channel: 'EMAIL',
       recipient: '',
       status: 'PENDING',
-      provider: isEmailConfigured() ? 'BREVO' : null,
+      provider: isEmailConfigured() ? (process.env.BREVO_API_KEY ? 'BREVO' : 'SMTP2GO') : null,
       payload: JSON.stringify({ subject: 'manual resend' }),
     },
   })
@@ -194,7 +194,7 @@ export async function resendConfirmationEmail(orderId: string): Promise<{ ok: bo
   }
   await db.notificationLog.update({ where: { id: log.id }, data: { recipient: order.customerEmail } })
   const settings = await getSettings()
-  const result = await sendEmailViaBrevo(
+  const result = await sendEmail(
     order.customerEmail,
     order.customerName,
     `Your MALÈTE KITS order ${order.orderNumber}`,
