@@ -25,7 +25,7 @@ restore_local_client() {
 trap restore_local_client EXIT
 
 echo "→ Validating $SCHEMA…"
-bunx prisma validate --schema "$SCHEMA"
+DATABASE_URL="$PROD_DATABASE_URL" bunx prisma validate --schema "$SCHEMA"
 
 echo "→ Generating PostgreSQL Prisma client…"
 bunx prisma generate --schema "$SCHEMA" >/dev/null
