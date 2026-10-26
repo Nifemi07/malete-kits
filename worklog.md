@@ -109,3 +109,22 @@ Work Log:
 
 Stage Summary:
 - Site now supports Brevo OR SMTP2GO with zero code changes once env keys are set; fail-safe retry contract unchanged. Awaiting user's SMTP2GO API key to configure + send test email. Fallback remains Plan C: launch WhatsApp-only (site fully works without email).
+
+---
+Task ID: 6
+Agent: Main agent (Z.ai)
+Task: Recommendation step #3 — prepare the codebase for production deployment (Vercel + Vercel/Neon Postgres). Email (#2) deferred to Plan C: Brevo card wall, Gmail App Password account-block, SMTP2GO signup blocked ("Error code 3 – Service unavailable", known issue per r/selfhosted).
+
+Work Log:
+- Created prisma/schema.prod.prisma (identical models, datasource provider postgresql) — local sandbox keeps prisma/schema.prisma (SQLite) so the live preview is untouched.
+- Created vercel.json with buildCommand: `prisma generate --schema=prisma/schema.prod.prisma && next build` so Vercel always generates the Postgres client regardless of bun lifecycle-script behavior.
+- next.config.ts: output "standalone" now conditional (skipped when process.env.VERCEL) to avoid standalone/Vercel interaction.
+- prisma/seed.ts: added SEED_* env overrides (SEED_WHATSAPP_NUMBER, SEED_SUPPORT_EMAIL, SEED_BANK_NAME, SEED_ACCOUNT_NAME, SEED_ACCOUNT_NUMBER, SEED_PAYMENT_METHODS) — prod store identity (real WhatsApp/email/OPay details) is passed at seed time and never committed to the repo. When bank fields present, composes payment/cash instructions matching the dev-configured wording.
+- Added scripts/deploy-db.sh: validate → generate prod client → prisma db push → seed against remote Postgres, with EXIT-trap restore of the local SQLite client. Passed bash -n.
+- Verified: prod schema valid + generates; SQLite client restored; seed re-run locally idempotent (27 products, 0 new variants, settings untouched); bun run lint clean; preview /api/meta healthy with real contacts.
+- Committed kit: 12a2eb9.
+- Generated AUTH_SECRET for the user to set in Vercel env vars (dev fallback 'malete-dev-secret-change-me' would be public in repo → must set in prod).
+
+Stage Summary:
+- Code is deployment-ready: repo push-ready (git clean, no remote yet), Vercel build config in place, remote DB provisioning scripted (no user terminal work needed — I run deploy-db.sh once the user pastes the Vercel Postgres connection strings).
+- User checklist issued: 1) GitHub account + private repo malete-kits + fine-grained PAT (Contents R/W) → I push; 2) Vercel signup via GitHub → import → Storage → create Postgres (Frankfurt recommended for Nigeria latency) → paste .env.local tab → I provision schema+seed with real settings; 3) set AUTH_SECRET env → redeploy → live test.
