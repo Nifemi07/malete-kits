@@ -10,7 +10,7 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
   try {
     await requireAdmin()
     const { id } = await params
-    const result = await resendConfirmationEmail(id)
+    const result = await retryNotification(id)
     if (!result.ok) return fail(result.error ?? 'Email resend failed', 502)
     return Response.json({ resent: true })
   } catch (err) {

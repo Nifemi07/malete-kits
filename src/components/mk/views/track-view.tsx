@@ -233,7 +233,7 @@ function StatusTimeline({ status, history }: { status: string; history: OrderVie
             )}
             <div className="pt-0.5">
               <div className={`text-sm font-bold ${s.done ? (cancelled ? 'text-destructive' : 'text-paper') : 'text-muted-foreground/60'}`}>{s.label}</div>
-              {history
+              {(history ?? [])
                 .filter((h) => h.toStatus === s.key || (s.key === 'READY' && (h.toStatus === 'READY_FOR_PICKUP' || h.toStatus === 'OUT_FOR_DELIVERY')))
                 .map((h) => (
                   <div key={h.id} className="text-xs text-muted-foreground mt-0.5">
