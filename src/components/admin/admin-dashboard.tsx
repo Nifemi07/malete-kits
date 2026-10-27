@@ -89,7 +89,7 @@ export function AdminDashboard({
       <header className="sticky top-0 z-40 border-b border-border bg-ink/95 backdrop-blur">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 flex items-center gap-3">
           { }
-          <img src="/logo-mk.svg" alt="" className="h-8 w-8 rounded-md border border-lime/40" />
+          <img src="/mk-icon.png" alt="" className="h-8 w-8 rounded-md border border-lime/40" />
           <div className="min-w-0">
             <div className="font-display text-lg font-bold tracking-[0.15em] uppercase text-paper leading-none">
               Malète<span className="text-lime"> Kits</span> <span className="text-muted-foreground text-xs normal-case tracking-normal font-sans font-medium">· Owner Dashboard</span>

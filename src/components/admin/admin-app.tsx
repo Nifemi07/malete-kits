@@ -67,7 +67,7 @@ export function AdminApp() {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             { }
-            <img src="/logo-mk.svg" alt="" className="h-16 w-16 mx-auto rounded-xl border border-lime/40" />
+            <img src="/mk-icon.png" alt="" className="h-16 w-16 mx-auto rounded-xl border border-lime/40" />
             <h1 className="mt-4 font-display text-3xl font-bold uppercase tracking-[0.15em] text-paper">
               Malète<span className="text-lime"> Kits</span>
             </h1>

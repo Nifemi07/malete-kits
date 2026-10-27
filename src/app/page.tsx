@@ -52,7 +52,7 @@ export default function Page() {
       <div className="min-h-screen bg-ink grid place-items-center" style={{ minHeight: '100dvh' }}>
         <div className="text-center">
           { }
-          <img src="/logo-mk.svg" alt="MALÈTE KITS" className="h-20 w-20 mx-auto rounded-2xl border border-lime/40 animate-pulse" />
+          <img src="/mk-icon.png" alt="MALÈTE KITS" className="h-20 w-20 mx-auto rounded-2xl border border-lime/40 animate-pulse" />
           <p className="mt-4 font-display text-xl tracking-[0.2em] uppercase text-paper">
             Malète<span className="text-lime"> Kits</span>
           </p>

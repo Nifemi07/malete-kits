@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description:
     "Affordable, quality football jerseys for KWASU students and Malete residents. Club & national team shirts with name/number customization. Order online, pay on confirmation — transfer or cash. Pickup or delivery in Malete.",
   keywords: ["football jersey", "Malete", "KWASU", "Kwara State", "jersey store", "Nigeria", "Malète Kits"],
-  icons: { icon: "/logo-mk.svg" },
+  icons: { icon: "/mk-icon.png" },
   openGraph: {
     title: "MALÈTE KITS — Football Jerseys in Malete",
     description: "Club & national team jerseys with customization. Order online, pay on confirmation.",

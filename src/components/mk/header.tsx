@@ -73,13 +73,11 @@ export function Header({ onNavigate, currentRoute, onSearch }: HeaderProps) {
               className="flex items-center gap-2.5 shrink-0 group"
               aria-label="MALÈTE KITS home"
             >
-              <span className="grid h-9 w-9 place-items-center rounded-lg bg-pine border border-lime/40 group-hover:border-lime transition-colors">
-                { }
-                <img src="/logo-mk.svg" alt="" className="h-6 w-6" />
-              </span>
-              <span className="font-display text-xl sm:text-2xl font-bold tracking-[0.18em] text-paper uppercase leading-none">
-                Malète<span className="text-lime"> Kits</span>
-              </span>
+              <img
+                src="/logo-mk.png"
+                alt="MALÈTE KITS"
+                className="h-8 sm:h-9 w-auto transition-transform group-hover:scale-[1.03]"
+              />
             </Link>
 
             {/* Desktop nav */}
