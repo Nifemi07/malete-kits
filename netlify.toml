@@ -1,0 +1,14 @@
+# MALÈTE KITS — Netlify deployment config (fallback host)
+# Primary host is Vercel. This file only matters if we deploy on Netlify.
+# Netlify detects Next.js automatically; the build command below makes sure
+# the PostgreSQL Prisma client is generated before next build.
+
+[build]
+  command = "prisma generate --schema=prisma/schema.prod.prisma && next build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
