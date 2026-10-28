@@ -1,5 +1,7 @@
 # MALÈTE KITS — Football Jersey Store & Order-Management System
 
+**Live: https://malete-kits.vercel.app** · Deployment health probe: `GET /api/health`
+
 A production-ready e-commerce and order-management website for a student-focused football
 jersey business in **Malete, Kwara State, Nigeria** (KWASU).
 
