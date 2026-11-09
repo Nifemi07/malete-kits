@@ -1,19 +1,25 @@
 """Download the captured product images (JetPack CDN) for the new catalog.
 
 Saves to public/images/products/<slug>.jpg, verifies each file is a real,
-non-blank image, and prints a slug->file manifest for the seed merge.
+non-blank image, and MERGES slug->file entries into photo-manifest.json
+(idempotent across batches).
 """
 import json
 import os
 import subprocess
+import sys
 
-EXT = "/home/z/my-project/scripts/catalog-extension.json"
+EXT = sys.argv[1] if len(sys.argv) > 1 else "/home/z/my-project/scripts/catalog-extension.json"
 OUTDIR = "/home/z/my-project/public/images/products"
+MANIFEST = "/home/z/my-project/scripts/photo-manifest.json"
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/125.0 Safari/537.36")
 
 ext = json.load(open(EXT))
-manifest = {}
+try:
+    manifest = json.load(open(MANIFEST))
+except FileNotFoundError:
+    manifest = {}
 for o in ext:
     url = o.get("img_remote")
     if not url:
@@ -41,6 +47,6 @@ for o in ext:
         ok = False
     print(f"{r:>16} ok={ok} {o['slug'][:50]}")
 
-with open("/home/z/my-project/scripts/photo-manifest.json", "w") as f:
+with open(MANIFEST, "w") as f:
     json.dump(manifest, f, indent=1)
-print(f"\n{len(manifest)} photos downloaded")
+print(f"\n{len(manifest)} photos in manifest")

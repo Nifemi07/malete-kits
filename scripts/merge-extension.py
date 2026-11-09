@@ -112,7 +112,10 @@ def ts_entry(o, manifest):
 
 
 def main():
-    ext = json.load(open(EXT))
+    import sys
+    ext_path = sys.argv[1] if len(sys.argv) > 1 else EXT
+    section = sys.argv[2] if len(sys.argv) > 2 else "Nov 2026 catalog expansion"
+    ext = json.load(open(ext_path))
     manifest = json.load(open(MANIFEST))
     seed = open(SEED).read()
 
@@ -126,10 +129,10 @@ def main():
     nations = [o for o in ext if o["categoryType"] == "NATIONAL"]
     chunks = []
     if clubs:
-        chunks.append("  // ---------- CLUB TEAMS — Nov 2026 catalog expansion ----------\n"
+        chunks.append(f"  // ---------- CLUB TEAMS — {section} ----------\n"
                       + "\n".join(ts_entry(o, manifest) for o in clubs))
     if nations:
-        chunks.append("  // ---------- NATIONAL TEAMS — Nov 2026 catalog expansion ----------\n"
+        chunks.append(f"  // ---------- NATIONAL TEAMS — {section} ----------\n"
                       + "\n".join(ts_entry(o, manifest) for o in nations))
     insert = "\n" + "\n".join(chunks) + "\n"
 
