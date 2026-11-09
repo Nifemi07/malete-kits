@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { ChevronLeft, Check, Info, Ruler, Sparkles, ShoppingBag } from 'lucide-react'
+import { ChevronLeft, Check, Info, Ruler, Shirt, Sparkles, ShoppingBag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -143,10 +143,17 @@ export function ProductView({ slug, onNavigate }: { slug: string; onNavigate: (r
         {/* Image */}
         <div className="relative overflow-hidden rounded-2xl border border-border bg-surface jersey-shadow">
           {product.imageUrl ? (
-             
+
             <img src={product.imageUrl} alt={product.name} className="aspect-[4/5] w-full object-cover" />
           ) : (
-            <div className="aspect-[4/5] grid place-items-center text-muted-foreground">No image</div>
+            <div className="aspect-[4/5] grid place-items-center">
+              <div className="flex flex-col items-center gap-3 text-muted-foreground">
+                <Shirt className="h-16 w-16" aria-hidden />
+                <span className="text-xs font-semibold tracking-widest uppercase">
+                  {product.teamName} · photo coming soon
+                </span>
+              </div>
+            </div>
           )}
           {product.badge && (
             <span className="absolute left-4 top-4 rounded-md bg-lime px-2.5 py-1 text-xs font-extrabold tracking-widest uppercase text-ink">

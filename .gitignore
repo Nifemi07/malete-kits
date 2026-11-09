@@ -58,3 +58,4 @@ db/
 worklog.md
 download/
 scripts/_fonts/
+__pycache__/

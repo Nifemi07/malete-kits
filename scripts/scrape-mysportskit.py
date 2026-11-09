@@ -9,13 +9,16 @@ deep links. Strategy:
   - never overwrite the output JSON with fewer rows than it already had
 """
 import json
+import sys
 import time
 
 from playwright.sync_api import sync_playwright
 
-BASE = "https://mysportskit.com.ng/product-category/men/clothing/jerseys/"
-MAX_PAGES = 25
-OUT = "/home/z/my-project/scripts/mysportskit-products.json"
+BASE = sys.argv[1] if len(sys.argv) > 1 else "https://mysportskit.com.ng/product-category/men/clothing/jerseys/"
+TAG = sys.argv[2] if len(sys.argv) > 2 else "men-jerseys"
+MAX_PAGES = 30
+OUT = f"/home/z/my-project/scripts/tiles-{TAG}.json"
+TIME_BUDGET = 3300
 UA = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/125.0 Safari/537.36"
@@ -102,7 +105,7 @@ def main():
 
         page = None
         for attempt in range(6):  # bootstrap: fresh sessions until one renders
-            if time.time() - start > 660:
+            if time.time() - start > TIME_BUDGET - 120:
                 break
             ctx = browser.new_context(user_agent=UA, viewport={"width": 1366, "height": 768})
             page = ctx.new_page()
@@ -130,7 +133,7 @@ def main():
 
         ctx_page = page
         n = 1
-        while n <= MAX_PAGES and time.time() - start < 660:
+        while n <= MAX_PAGES and time.time() - start < TIME_BUDGET:
             fresh = extract_current(page)
             print(f"page {n}: +{fresh} new (total {len(products)})", flush=True)
             save(products)

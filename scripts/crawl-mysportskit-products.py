@@ -19,8 +19,8 @@ UA = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/125.0 Safari/537.36"
 )
-MAX_PAGES = 44
-TIME_BUDGET = 700  # seconds
+MAX_PAGES = 170
+TIME_BUDGET = 3300  # seconds
 
 SEEDS = [
     "https://mysportskit.com.ng/product/argentina-messi-2026-jersey/",
@@ -31,6 +31,19 @@ SEEDS = [
     "https://mysportskit.com.ng/product/real-madrid-away-2026-2027-kids-jersey/",
     "https://mysportskit.com.ng/product/liverpool-home-kids-2026-2027-jersey/",
 ]
+
+
+def load_seeds():
+    """Seed the queue with every product URL already captured anywhere."""
+    try:
+        cands = json.load(open("/home/z/my-project/scripts/candidates-all.json"))
+        urls = [c["url"] for c in cands if "/product/" in c.get("url", "")]
+        if urls:
+            print(f"seeding queue with {len(urls)} known URLs", flush=True)
+            return SEEDS + [u for u in urls if u not in SEEDS]
+    except FileNotFoundError:
+        pass
+    return SEEDS
 
 EXTRACT = """() => {
     const title = document.querySelector('h1.product_title, .product_title, h1');
@@ -85,7 +98,7 @@ def load_json():
 def main():
     pages, seen = load_json()
     print(f"resuming with {len(pages)} pages", flush=True)
-    queue = [u for u in SEEDS if u not in seen]
+    queue = [u for u in load_seeds() if u not in seen]
     requeue = set()
     failed = set()
     start = time.time()

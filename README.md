@@ -24,6 +24,17 @@ payment, and moves the order through fulfilment. Nothing is ever charged online.
 | Admin | Secure dashboard: stats, order search/filters, status workflow, payment verification, internal notes, resend email, retry notifications, cancel/refund, inventory editor, store settings |
 | Stack | Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · shadcn/ui · Prisma ORM · SQLite (dev) / PostgreSQL (prod) · custom JWT admin auth (scrypt + HMAC, httpOnly cookie) |
 
+## Catalog provenance
+
+The 129-product catalog mirrors **mysportskit.com.ng** (captured 9 Nov 2026 from their
+listings, product pages and Google-indexed snippets; their WAF blocks direct crawling
+from datacenter IPs, so the tooling in `scripts/` uses a Playwright pagination walker,
+a BFS product crawler and search-snippet harvests — `scripts/verify-prices.py` checks
+every price against captured evidence). A handful of fan/kids kits carry the site's
+uniform ₦24,999 class price and are flagged `inferred` in `scripts/catalog-extension.json`;
+adjust freely in Admin → Products. Product photos without a captured image reuse the
+team photo or render a branded "photo coming soon" tile.
+
 ## Quick start
 
 ```bash
@@ -36,7 +47,7 @@ cp .env.example .env
 # 3. Create the database (SQLite in dev) + baseline migration
 bun run db:push
 
-# 4. Seed store data (27 jerseys, sizes, stock, admin user, settings)
+# 4. Seed store data (129 jerseys, sizes, stock, admin user, settings)
 bun run db:seed
 
 # 5. Run the dev server
