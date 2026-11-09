@@ -52,6 +52,7 @@ export function Footer({ onNavigate }: FooterProps) {
                 ['Club Teams', '#/shop?type=CLUB'],
                 ['National Teams', '#/shop?type=NATIONAL'],
                 ['Track Your Order', '#/track'],
+                ['My Account', '#/account'],
                 ['Contact & Support', '#/contact'],
               ].map(([label, route]) => (
                 <li key={route}>

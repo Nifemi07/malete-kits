@@ -115,6 +115,16 @@ export const loginSchema = z.object({
   password: z.string().min(6).max(128),
 })
 
+// --- Customer auth (email + 6-digit verification code) ------------------------
+export const customerRequestCodeSchema = z.object({
+  email: z.string().trim().toLowerCase().email('Enter a valid email address').max(120),
+})
+
+export const customerVerifyCodeSchema = z.object({
+  email: z.string().trim().toLowerCase().email('Enter a valid email address').max(120),
+  code: z.string().trim().regex(/^\d{6}$/, 'Enter the 6-digit code from your email'),
+})
+
 // --- Admin actions -----------------------------------------------------------
 export const updateOrderStatusSchema = z.object({
   status: z.enum([

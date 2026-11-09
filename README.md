@@ -70,6 +70,21 @@ WhatsApp links stay hidden until the owner sets the real number in
 international `234…` format that wa.me links need. To preset it when seeding a fresh
 database, pass `SEED_WHATSAPP_NUMBER` (or `OWNER_WHATSAPP_NUMBER`) instead.
 
+### Customer accounts (email code sign-in)
+
+Customers sign in at `#/account` (**My Account** in the header/footer) with just their
+email — no password. We email a 6-digit code (10-minute expiry, single-use, max 5 wrong
+attempts) and the account is created on first sign-in, so the code doubles as email
+verification. Once signed in, customers see every order placed with that email under
+**My Orders** and can jump to the full tracking page. This **requires a working email
+provider** (`BREVO_API_KEY` or `SMTP2GO_API_KEY`) — code emails are logged in
+**Admin → Notifications** like order emails. Abuse controls: 3 codes per email and 12
+per IP per 15 min, 8 verify attempts per email+IP per 15 min. Sessions last 30 days in
+a separate `mk_customer_session` cookie that can never open admin routes.
+
+`scripts/provision-owner.ts` sets the real owner admin, the WhatsApp number and
+(optionally) retires the generic seeded admin — see the script header for usage.
+
 ## First-run checklist for the store owner
 
 1. Log in to the admin dashboard.
@@ -93,7 +108,7 @@ missing email/WhatsApp credentials mean notifications are logged as FAILED (visi
 | `DATABASE_URL` | ✅ | SQLite file (dev) or PostgreSQL URL (prod) |
 | `AUTH_SECRET` | ✅ (prod) | Signs admin session JWTs — use a long random string |
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | seed + rotation | Admin credentials; `ADMIN_PASSWORD` is also what `scripts/rotate-admin-password.sh` applies |
-| `BREVO_API_KEY` | optional | Enables transactional emails (Brevo) |
+| `BREVO_API_KEY` | optional | Transactional emails (order confirmations + customer sign-in codes) |
 | `BREVO_SENDER_EMAIL` | optional | Verified sender, e.g. `orders@yourdomain.com` |
 | `BREVO_SENDER_NAME` | optional | Display name (default `MALÈTE KITS`) |
 | `WHATSAPP_ACCESS_TOKEN` | optional | Meta WhatsApp Cloud API token (Mode B) |

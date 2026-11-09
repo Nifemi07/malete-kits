@@ -233,8 +233,8 @@ model PaymentRecord {
 
 model NotificationLog {
   id        String    @id @default(cuid())
-  orderId   String
-  order     Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   String? // null for store-wide notifications that are not tied to an order (e.g. customer login codes)
+  order     Order?    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   channel   String // EMAIL | WHATSAPP
   recipient String
   status    String    @default("PENDING") // PENDING | SENT | FAILED
@@ -289,4 +289,36 @@ model StoreSettings {
 model Counter {
   id    String @id // "ORDER"
   value Int
+}
+
+// ---------------------------------------------------------------------------
+// CUSTOMER ACCOUNTS (email login with verification codes)
+// ---------------------------------------------------------------------------
+// Separate from the checkout-time Customer record (which is phone-keyed and
+// denormalized into orders): customer sign-in is email-first, and "My Orders"
+// matches orders by the customerEmail string — no FK needed.
+
+model CustomerAccount {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  name            String?
+  isActive        Boolean   @default(true)
+  emailVerifiedAt DateTime?
+  lastLoginAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  loginCodes      CustomerLoginCode[]
+}
+
+model CustomerLoginCode {
+  id         String          @id @default(cuid())
+  accountId  String
+  account    CustomerAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  codeHash   String // scrypt hash of the 6-digit code (same format as admin passwords)
+  expiresAt  DateTime
+  consumedAt DateTime?
+  attempts   Int       @default(0)
+  createdAt  DateTime  @default(now())
+
+  @@index([accountId])
 }

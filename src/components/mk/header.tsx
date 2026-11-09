@@ -21,6 +21,7 @@ const NAV = [
   { label: 'Club Kits', route: '#/shop?type=CLUB' },
   { label: 'National', route: '#/shop?type=NATIONAL' },
   { label: 'Track Order', route: '#/track' },
+  { label: 'My Account', route: '#/account' },
   { label: 'Contact', route: '#/contact' },
 ]
 

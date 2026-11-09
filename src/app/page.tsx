@@ -12,6 +12,7 @@ import { CheckoutView } from '@/components/mk/views/checkout-view'
 import { ConfirmationView } from '@/components/mk/views/confirmation-view'
 import { TrackView } from '@/components/mk/views/track-view'
 import { ContactView } from '@/components/mk/views/contact-view'
+import { AccountView } from '@/components/mk/views/account-view'
 import { AdminApp } from '@/components/admin/admin-app'
 
 interface Route {
@@ -106,6 +107,9 @@ export default function Page() {
       break
     case '/contact':
       view = <ContactView />
+      break
+    case '/account':
+      view = <AccountView onNavigate={navigate} />
       break
     default:
       if (productSlug) {

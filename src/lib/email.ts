@@ -153,6 +153,46 @@ function escapeHtml(s: string): string {
     .replace(/'/g, '&#39;')
 }
 
+/** Branded sign-in code email — the code is the customer's email verification. */
+export function buildLoginCodeEmail(name: string | null, code: string, minutes = 10): string {
+  const firstName = (name ?? '').trim().split(' ')[0] || 'there'
+  const digits = code
+    .split('')
+    .map(
+      (d) =>
+        `<td style="background:${CHARCOAL};border-radius:10px;margin:0 4px;"><span style="display:inline-block;padding:14px 18px;font-size:30px;font-weight:900;letter-spacing:4px;color:${LIME};font-family:'Segoe UI',Helvetica,Arial,sans-serif;">${d}</span></td>`,
+    )
+    .join('')
+  return `<!doctype html>
+<html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
+<body style="margin:0;padding:0;background:#EDEBE2;font-family:'Segoe UI',Helvetica,Arial,sans-serif;">
+  <div style="max-width:620px;margin:0 auto;background:${OFFWHITE};">
+    <div style="background:${INK};padding:28px 32px;">
+      <div style="font-size:24px;font-weight:900;letter-spacing:2px;color:${OFFWHITE};">MALÈTE <span style="color:${LIME};">KITS</span></div>
+      <div style="color:#9BA1A8;font-size:12px;margin-top:4px;letter-spacing:1px;">AUTHENTIC FOOTBALL JERSEYS · MALETE, KWARA STATE</div>
+    </div>
+    <div style="padding:32px;">
+      <h1 style="margin:0 0 8px;font-size:22px;color:${INK};">Your sign-in code</h1>
+      <p style="margin:0 0 22px;color:#4A4F55;font-size:14px;line-height:1.6;">
+        Hi ${escapeHtml(firstName)}, use the code below to sign in to your MALÈTE KITS account.
+        It verifies your email and expires in <strong>${minutes} minutes</strong>.
+      </p>
+      <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 22px;"><tr>${digits}</tr></table>
+      <p style="margin:0 0 20px;color:#4A4F55;font-size:14px;line-height:1.6;">
+        Enter this code on the sign-in page. Never share it with anyone — the MALÈTE KITS team
+        will <strong>never</strong> ask you for this code.
+      </p>
+      <div style="padding:14px 18px;background:#FFF4E0;border-left:3px solid #F5A524;color:#8A4B00;font-size:13px;line-height:1.6;">
+        Didn't request this code? You can safely ignore this email — your account stays protected and no one can sign in without the code.
+      </div>
+    </div>
+    <div style="background:${INK};color:#9BA1A8;text-align:center;font-size:11px;letter-spacing:1px;padding:18px;">
+      MALÈTE KITS · MALETE, KWARA STATE, NIGERIA
+    </div>
+  </div>
+</body></html>`
+}
+
 // --- Brevo sender ------------------------------------------------------------
 
 export function isEmailConfigured(): boolean {

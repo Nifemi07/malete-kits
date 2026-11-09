@@ -18,7 +18,7 @@ interface LogRow {
   attempts: number
   error: string | null
   createdAt: string
-  order: { orderNumber: string; customerName: string }
+  order: { orderNumber: string; customerName: string } | null // null for store-wide notifications (customer sign-in codes)
 }
 
 const STATUS_STYLE: Record<string, string> = {
@@ -109,7 +109,7 @@ export function NotificationsTab() {
                   <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
                     {new Date(l.createdAt).toLocaleString('en-NG', { dateStyle: 'short', timeStyle: 'short' })}
                   </TableCell>
-                  <TableCell className="font-mono text-sm text-lime">{l.order.orderNumber}</TableCell>
+                  <TableCell className="font-mono text-sm text-lime">{l.order ? l.order.orderNumber : <span className="text-muted-foreground">(sign-in code)</span>}</TableCell>
                   <TableCell>
                     <Badge variant="outline" className="border-border text-paper/80 text-[10px]">{l.channel}</Badge>
                   </TableCell>

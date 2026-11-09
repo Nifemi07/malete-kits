@@ -15,6 +15,7 @@ import { db } from './db'
 import { getSettings } from './settings'
 import {
   buildOrderConfirmationEmail,
+  buildLoginCodeEmail,
   sendEmail,
   isEmailConfigured,
 } from './email'
@@ -126,6 +127,52 @@ export async function dispatchOrderNotifications(orderId: string): Promise<void>
   }
 }
 
+/**
+ * Sends a customer sign-in code email and records the attempt in NotificationLog
+ * (orderId is null — this is a store-wide notification, not an order one).
+ * Returns whether the email actually left the building, so the login UI can be
+ * honest when no provider is configured.
+ */
+export async function dispatchLoginCodeEmail(
+  email: string,
+  name: string | null,
+  code: string,
+): Promise<{ delivered: boolean }> {
+  let logId: string | null = null
+  try {
+    const log = await db.notificationLog.create({
+      data: {
+        orderId: null,
+        channel: 'EMAIL',
+        recipient: email,
+        status: 'PENDING',
+        provider: isEmailConfigured() ? (process.env.BREVO_API_KEY ? 'BREVO' : 'SMTP2GO') : null,
+        payload: JSON.stringify({ purpose: 'CUSTOMER_LOGIN_CODE', subject: 'Your MALÈTE KITS sign-in code' }),
+      },
+    })
+    logId = log.id
+  } catch {
+    // Logging must never block the code send.
+  }
+
+  const result = await sendEmail(email, name ?? 'Customer', 'Your MALÈTE KITS sign-in code', buildLoginCodeEmail(name, code))
+
+  if (logId) {
+    await db.notificationLog
+      .update({
+        where: { id: logId },
+        data: {
+          status: result.ok ? 'SENT' : 'FAILED',
+          attempts: { increment: 1 },
+          error: result.ok ? null : result.error,
+          sentAt: result.ok ? new Date() : null,
+        },
+      })
+      .catch(() => {})
+  }
+  return { delivered: result.ok }
+}
+
 /** Re-attempt a single notification log (admin dashboard retry button). */
 export async function retryNotification(logId: string): Promise<{ ok: boolean; error?: string }> {
   const log = await db.notificationLog.findUnique({ where: { id: logId }, include: { order: { include: { items: true } } } })
@@ -133,6 +180,15 @@ export async function retryNotification(logId: string): Promise<{ ok: boolean; e
   const settings = await getSettings()
 
   if (log.channel === 'EMAIL') {
+    // Store-wide emails (e.g. customer sign-in codes) have no order — a retry
+    // would resend an expired code, so refuse honestly instead.
+    if (!log.order) {
+      await db.notificationLog.update({
+        where: { id: log.id },
+        data: { status: 'FAILED', attempts: { increment: 1 }, error: 'Login-code email cannot be retried — codes expire in 10 minutes. Ask the customer to request a fresh code.' },
+      })
+      return { ok: false, error: 'Login-code emails cannot be retried — ask the customer to request a fresh code.' }
+    }
     const result = await sendEmail(
       log.order.customerEmail,
       log.order.customerName,
@@ -155,6 +211,13 @@ export async function retryNotification(logId: string): Promise<{ ok: boolean; e
   }
 
   // WHATSAPP
+  if (!log.order) {
+    await db.notificationLog.update({
+      where: { id: log.id },
+      data: { status: 'FAILED', attempts: { increment: 1 }, error: 'WhatsApp notifications are always tied to an order — nothing to retry.' },
+    })
+    return { ok: false, error: 'WhatsApp notifications are always tied to an order — nothing to retry.' }
+  }
   if (!settings.whatsappNumber) {
     await db.notificationLog.update({
       where: { id: log.id },
