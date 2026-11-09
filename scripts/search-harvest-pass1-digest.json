@@ -1,0 +1,23 @@
+{
+  "_comment": "Digest of harvest-search.py PASS 1 output (20 team queries, printed to console before pass 2 overwrote search-harvest.json). slug -> list of [lo, hi_or_null] ₦ price fragments found in snippets.",
+  "ac-milan-26-27-home-jersey": [[24999, 34999]],
+  "arsenal-authentic-2026-2027-away-jersey": [],
+  "arsenal-authentic-2026-2027-home-jersey": [],
+  "barcelona-home-2026-27-jersey": [[24950, 30950]],
+  "barcelona-home-authentic-2026-27-jersey": [[24950, 32950]],
+  "barcelona-home-long-sleeve-2026-27-jersey": [[24999, 32950]],
+  "bayern-munich-2026-27-home-jersey": [[24999, null], [24999, null]],
+  "borussia-dortmund-2026-27-home-jersey": [[24999, 32999]],
+  "england-home-2026-2027-jersey": [[85950, null], [24999, null]],
+  "inter-milan-26-27-home-jersey": [[24999, 32999]],
+  "liverpool-away-2026-2027-jersey": [[24999, 32999]],
+  "liverpool-home-2026-2027-jersey": [[28999, null], [34999, null]],
+  "liverpool-home-authentic-2026-2027-jersey": [[24999, 32999]],
+  "manchester-city-2026-2027-away-jersey": [[28950, 36950]],
+  "manchester-city-2026-2027-home-jersey": [[30999, 35999], [24999, null]],
+  "manchester-city-2026-2027-home-kids-jersey": [[24950, null]],
+  "manchester-city-2026-2027-third-kits-jersey": [[24999, 30999], [24999, null], [30999, null]],
+  "paris-saint-germain-home-2026-2027-jersey": [[24999, null]],
+  "paris-saint-germain-home-kids-2026-2027-jersey": [[36950, null]],
+  "argentina-messi-2026-jersey": [[28999, 34999]]
+}

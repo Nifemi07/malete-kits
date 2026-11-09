@@ -21,6 +21,8 @@ function stockFor(index: number): number {
 
 interface ProductSeed {
   slug: string
+  name?: string // override the generated "Team Home Shirt 26/27" name
+  desc?: string // override the generated description (authentic items)
   teamName: string
   season: string
   kitType: 'HOME' | 'AWAY' | 'THIRD'
@@ -30,71 +32,81 @@ interface ProductSeed {
   image: string | null
   badge?: string
   featured?: boolean
-  blurb: string
+  blurb?: string // used by description() unless desc overrides it
 }
 
+// ---------------------------------------------------------------------------
+// CATALOG — mirrors mysportskit.com.ng jerseys and prices (captured 9 Nov 2026
+// from their listings/snippets; every price verified in scripts/verify-prices.py).
+// Base price = the site's "from" price for the fan version.
+// ---------------------------------------------------------------------------
 const PRODUCTS: ProductSeed[] = [
   // ---------- CLUB TEAMS ----------
-  { slug: 'real-madrid-home-25-26', teamName: 'Real Madrid', season: '25/26', kitType: 'HOME', league: 'La Liga', categoryType: 'CLUB', price: 12000, image: '/images/products/realmadrid-home.webp', badge: 'BESTSELLER', featured: true,
-    blurb: 'Los Blancos never go out of style. The 25/26 Real Madrid home shirt keeps the iconic all-white look with gold accents — the same energy as the Bernabéu on a UCL night. Lightweight, breathable and perfect for Malete heat.' },
-  { slug: 'real-madrid-away-25-26', teamName: 'Real Madrid', season: '25/26', kitType: 'AWAY', league: 'La Liga', categoryType: 'CLUB', price: 11500, image: '/images/products/realmadrid-home.webp',
-    blurb: 'The Real Madrid away shirt for 25/26 — a clean, modern take on the Merengues travel colours. Subtle, sharp and instantly recognisable on campus.' },
-  { slug: 'barcelona-home-25-26', teamName: 'FC Barcelona', season: '25/26', kitType: 'HOME', league: 'La Liga', categoryType: 'CLUB', price: 12000, image: '/images/products/barcelona-home.webp', badge: 'BESTSELLER', featured: true,
-    blurb: 'Blaugrana pride in its purest form. The 25/26 Barça home shirt carries the legendary stripes with a fresh modern collar. For every culer in KWASU — Més que un club.' },
-  { slug: 'barcelona-away-25-26', teamName: 'FC Barcelona', season: '25/26', kitType: 'AWAY', league: 'La Liga', categoryType: 'CLUB', price: 11000, image: '/images/products/barcelona-home.webp',
-    blurb: 'Barcelona away colours for 25/26 — clean, bold and built for away-day energy. Stand out from the usual home-shirt crowd.' },
-  { slug: 'arsenal-home-25-26', teamName: 'Arsenal', season: '25/26', kitType: 'HOME', league: 'Premier League', categoryType: 'CLUB', price: 11500, image: '/images/products/arsenal-home.webp', featured: true,
-    blurb: 'The Gunners’ classic red and white for 25/26. North London standard, Malete approved. COYG!' },
-  { slug: 'arsenal-away-25-26', teamName: 'Arsenal', season: '25/26', kitType: 'AWAY', league: 'Premier League', categoryType: 'CLUB', price: 11000, image: '/images/products/arsenal-home.webp',
-    blurb: 'Arsenal’s 25/26 away shirt — sleek, dark and deadly, just like their counter-attacks.' },
-  { slug: 'chelsea-home-25-26', teamName: 'Chelsea', season: '25/26', kitType: 'HOME', league: 'Premier League', categoryType: 'CLUB', price: 11000, image: '/images/products/chelsea-home.webp', featured: true,
-    blurb: 'Blues forever. The 25/26 Chelsea home shirt in royal blue with clean white detailing — a staple for any Stamford Bridge faithful.' },
-  { slug: 'chelsea-away-25-26', teamName: 'Chelsea', season: '25/26', kitType: 'AWAY', league: 'Premier League', categoryType: 'CLUB', price: 10500, image: '/images/products/chelsea-home.webp',
-    blurb: 'Chelsea away kit for 25/26 — fresh colourway, same Blue Lion heart.' },
-  { slug: 'liverpool-home-25-26', teamName: 'Liverpool', season: '25/26', kitType: 'HOME', league: 'Premier League', categoryType: 'CLUB', price: 11500, image: '/images/products/liverpool-home.webp',
-    blurb: 'You’ll Never Walk Alone in red. The 25/26 Liverpool home shirt with the classic Anfield look — bold, bright and built to last.' },
-  { slug: 'liverpool-away-25-26', teamName: 'Liverpool', season: '25/26', kitType: 'AWAY', league: 'Premier League', categoryType: 'CLUB', price: 11000, image: '/images/products/liverpool-home.webp',
-    blurb: 'Liverpool away shirt for 25/26 — the travelling Reds’ colours, sharp enough for matchday or class.' },
-  { slug: 'man-city-home-25-26', teamName: 'Manchester City', season: '25/26', kitType: 'HOME', league: 'Premier League', categoryType: 'CLUB', price: 12000, image: '/images/products/mancity-home.webp',
-    blurb: 'Sky Blue royalty. The 25/26 Man City home shirt — the colours of the Pep era, now on the streets of Malete.' },
-  { slug: 'man-city-away-25-26', teamName: 'Manchester City', season: '25/26', kitType: 'AWAY', league: 'Premier League', categoryType: 'CLUB', price: 11000, image: '/images/products/mancity-home.webp',
-    blurb: 'Manchester City 25/26 away kit — a fresh look for the reigning force of English football.' },
-  { slug: 'man-utd-home-25-26', teamName: 'Manchester United', season: '25/26', kitType: 'HOME', league: 'Premier League', categoryType: 'CLUB', price: 11500, image: '/images/products/manutd-home.webp', badge: 'BESTSELLER', featured: true,
-    blurb: 'The Red Devils’ 25/26 home shirt — theatre, tradition and that famous crest. A campus classic every season.' },
-  { slug: 'man-utd-away-25-26', teamName: 'Manchester United', season: '25/26', kitType: 'AWAY', league: 'Premier League', categoryType: 'CLUB', price: 10500, image: '/images/products/manutd-home.webp',
-    blurb: 'Manchester United away colours for 25/26 — clean design for Reds who like it low-key.' },
-  { slug: 'psg-home-25-26', teamName: 'Paris Saint-Germain', season: '25/26', kitType: 'HOME', league: 'Ligue 1', categoryType: 'CLUB', price: 12000, image: '/images/products/psg-home.webp',
-    blurb: 'Ici c’est Paris. The 25/26 PSG home shirt — navy with the signature red stripe, Parisian style for KWASU streets.' },
-  { slug: 'bayern-home-25-26', teamName: 'Bayern Munich', season: '25/26', kitType: 'HOME', league: 'Bundesliga', categoryType: 'CLUB', price: 11500, image: '/images/products/bayern-home.webp',
-    blurb: 'Mia san mia. Bayern’s 25/26 home shirt in classic red — Bavarian power, Bundesliga standard.' },
-  { slug: 'inter-home-25-26', teamName: 'Inter Milan', season: '25/26', kitType: 'HOME', league: 'Serie A', categoryType: 'CLUB', price: 11000, image: '/images/products/inter-home.webp',
-    blurb: 'The Nerazzurri stripes never miss. Inter’s 25/26 home shirt — timeless Milanese design.' },
-  { slug: 'ac-milan-home-25-26', teamName: 'AC Milan', season: '25/26', kitType: 'HOME', league: 'Serie A', categoryType: 'CLUB', price: 11000, image: '/images/products/acmilan-home.webp',
-    blurb: 'Rossoneri red and black for 25/26. For the Milanista who knows style is non-negotiable.' },
-  { slug: 'al-nassr-home-25-26', teamName: 'Al Nassr', season: '25/26', kitType: 'HOME', league: 'Saudi Pro League', categoryType: 'CLUB', price: 10000, image: '/images/products/alnassr-home.webp', featured: true,
-    blurb: 'SIUUU! The Al Nassr home shirt — CR7’s club colours in yellow and blue. One of the most requested shirts in Malete.' },
+  { slug: 'real-madrid-home-26-27', teamName: 'Real Madrid', season: '26/27', kitType: 'HOME', league: 'La Liga', categoryType: 'CLUB', price: 24999, image: '/images/products/realmadrid-home.webp', badge: 'BESTSELLER', featured: true,
+    blurb: 'Los Blancos never go out of style. The 26/27 Real Madrid home shirt keeps the iconic all-white look with gold accents — the same energy as the Bernabéu on a UCL night. Instantly recognisable on campus, matchday or class.' },
+  { slug: 'real-madrid-away-26-27', teamName: 'Real Madrid', season: '26/27', kitType: 'AWAY', league: 'La Liga', categoryType: 'CLUB', price: 24999, image: '/images/products/realmadrid-home.webp', badge: 'NEW',
+    blurb: 'The Real Madrid away shirt for 26/27 — a clean, modern take on the Merengues travel colours. Subtle, sharp and instantly recognisable on campus.' },
+  { slug: 'barcelona-home-26-27', teamName: 'FC Barcelona', season: '26/27', kitType: 'HOME', league: 'La Liga', categoryType: 'CLUB', price: 24950, image: '/images/products/barcelona-home.webp', badge: 'BESTSELLER', featured: true,
+    blurb: 'Blaugrana pride in its purest form. The 26/27 Barça home shirt carries the legendary stripes with a fresh modern collar. For every culer in KWASU — Més que un club.' },
+  { slug: 'arsenal-home-26-27', teamName: 'Arsenal', season: '26/27', kitType: 'HOME', league: 'Premier League', categoryType: 'CLUB', price: 28999, image: '/images/products/arsenal-home.webp', badge: 'NEW', featured: true,
+    blurb: 'The Gunners’ classic red and white for 26/27. North London standard, Malete approved. COYG!' },
+  { slug: 'arsenal-away-26-27', teamName: 'Arsenal', season: '26/27', kitType: 'AWAY', league: 'Premier League', categoryType: 'CLUB', price: 24999, image: '/images/products/arsenal-home.webp', badge: 'NEW',
+    blurb: 'Arsenal’s 26/27 away shirt — sleek, dark and deadly, just like their counter-attacks.' },
+  { slug: 'arsenal-jvc-retro-1990', name: 'Arsenal JVC All-Black 1990 Retro Jersey', teamName: 'Arsenal', season: '1990', kitType: 'HOME', league: 'Premier League', categoryType: 'CLUB', price: 28999, image: '/images/products/arsenal-retro-1990.jpg',
+    blurb: 'The legendary all-black JVC-era shirt from 1990 — a cult classic reborn. For Gunners who know their history, not just their table position.' },
+  { slug: 'arsenal-authentic-home-25-26', name: 'Arsenal Authentic Home Shirt 25/26 (Player Spec)', teamName: 'Arsenal', season: '25/26', kitType: 'HOME', league: 'Premier League', categoryType: 'CLUB', price: 32999, image: '/images/products/arsenal-authentic-home-25-26.jpg',
+    desc: 'The real deal: the AUTHENTIC (player-spec) Arsenal 25/26 home shirt — the exact fit, fabric and heat-pressed details the players wear on the pitch, not the fan replica. Slim athletic fit; consider one size up.\n\nWant your name and favourite number printed in the official font? Add customisation at checkout.\n\nOrdering is simple: place your order, we confirm availability on WhatsApp, you pay by transfer or cash, then pick up in Malete or get it delivered to your hostel.' },
+  { slug: 'arsenal-authentic-away-25-26', name: 'Arsenal Authentic Away Shirt 25/26 (Player Spec)', teamName: 'Arsenal', season: '25/26', kitType: 'AWAY', league: 'Premier League', categoryType: 'CLUB', price: 32999, image: '/images/products/arsenal-authentic-away-25-26.jpg',
+    desc: 'The AUTHENTIC (player-spec) Arsenal 25/26 away shirt — the exact fit, fabric and tech the pros wear on the road, not the fan replica. Slim athletic fit; consider one size up.\n\nAdd your name and favourite number in the official font at checkout.\n\nOrdering is simple: place your order, we confirm availability on WhatsApp, you pay by transfer or cash, then pick up in Malete or get it delivered to your hostel.' },
+  { slug: 'chelsea-home-26-27', teamName: 'Chelsea', season: '26/27', kitType: 'HOME', league: 'Premier League', categoryType: 'CLUB', price: 24999, image: '/images/products/chelsea-home.webp', badge: 'NEW',
+    blurb: 'Blues forever. The 26/27 Chelsea home shirt in royal blue with clean white detailing — a staple for any Stamford Bridge faithful.' },
+  { slug: 'chelsea-away-26-27', teamName: 'Chelsea', season: '26/27', kitType: 'AWAY', league: 'Premier League', categoryType: 'CLUB', price: 24999, image: '/images/products/chelsea-home.webp', badge: 'NEW',
+    blurb: 'Chelsea away kit for 26/27 — fresh colourway, same Blue Lion heart.' },
+  { slug: 'liverpool-home-26-27', teamName: 'Liverpool', season: '26/27', kitType: 'HOME', league: 'Premier League', categoryType: 'CLUB', price: 28999, image: '/images/products/liverpool-home.webp', badge: 'NEW', featured: true,
+    blurb: 'You’ll Never Walk Alone in red. The 26/27 Liverpool home shirt with the classic Anfield look — bold, bright and built to last.' },
+  { slug: 'liverpool-away-26-27', teamName: 'Liverpool', season: '26/27', kitType: 'AWAY', league: 'Premier League', categoryType: 'CLUB', price: 24999, image: '/images/products/liverpool-home.webp', badge: 'NEW',
+    blurb: 'Liverpool away shirt for 26/27 — the travelling Reds’ colours, sharp enough for matchday or class.' },
+  { slug: 'liverpool-third-26-27', name: 'Liverpool Third Kit 26/27', teamName: 'Liverpool', season: '26/27', kitType: 'THIRD', league: 'Premier League', categoryType: 'CLUB', price: 24999, image: '/images/products/liverpool-third-26-27.jpg', badge: 'NEW',
+    blurb: 'The 26/27 Liverpool third kit — the shirt for Reds who already own the home and away one and still want more. Standout colourway, stand-out fit.' },
+  { slug: 'man-city-home-26-27', teamName: 'Manchester City', season: '26/27', kitType: 'HOME', league: 'Premier League', categoryType: 'CLUB', price: 30999, image: '/images/products/mancity-home.webp', badge: 'NEW', featured: true,
+    blurb: 'Sky Blue royalty. The 26/27 Man City home shirt — the colours of the Pep era, now on the streets of Malete.' },
+  { slug: 'man-city-away-26-27', teamName: 'Manchester City', season: '26/27', kitType: 'AWAY', league: 'Premier League', categoryType: 'CLUB', price: 28950, image: '/images/products/mancity-home.webp', badge: 'NEW',
+    blurb: 'Manchester City 26/27 away kit — a fresh look for the reigning force of English football.' },
+  { slug: 'man-city-third-26-27', name: 'Manchester City Third Kit 26/27', teamName: 'Manchester City', season: '26/27', kitType: 'THIRD', league: 'Premier League', categoryType: 'CLUB', price: 24999, image: '/images/products/mancity-home.webp', badge: 'NEW',
+    blurb: 'The 26/27 City third kit — the alternative colours for Citizens who like the road less travelled.' },
+  { slug: 'man-utd-home-26-27', teamName: 'Manchester United', season: '26/27', kitType: 'HOME', league: 'Premier League', categoryType: 'CLUB', price: 24999, image: '/images/products/manutd-home.webp', badge: 'BESTSELLER', featured: true,
+    blurb: 'The Red Devils’ 26/27 home shirt — theatre, tradition and that famous crest. A campus classic every season.' },
+  { slug: 'man-utd-retro-02-03', name: 'Manchester United 02/03 Away Retro Jersey', teamName: 'Manchester United', season: '02/03', kitType: 'AWAY', league: 'Premier League', categoryType: 'CLUB', price: 28950, image: '/images/products/manutd-home.webp',
+    blurb: 'The treble-era gold away shirt from 02/03 — the one Beckham and van Nistelrooy made famous. A retro flex that never goes out of style.' },
+  { slug: 'tottenham-home-25-26', teamName: 'Tottenham Hotspur', season: '25/26', kitType: 'HOME', league: 'Premier League', categoryType: 'CLUB', price: 28999, image: null,
+    blurb: 'To Dare Is To Do. The Spurs 25/26 home shirt — for the north London loyalist in Malete.' },
+  { slug: 'ac-milan-home-26-27', teamName: 'AC Milan', season: '26/27', kitType: 'HOME', league: 'Serie A', categoryType: 'CLUB', price: 24999, image: '/images/products/acmilan-home.webp', badge: 'NEW',
+    blurb: 'Rossoneri red and black for 26/27. For the Milanista who knows style is non-negotiable.' },
+  { slug: 'inter-home-26-27', teamName: 'Inter Milan', season: '26/27', kitType: 'HOME', league: 'Serie A', categoryType: 'CLUB', price: 24999, image: '/images/products/inter-home.webp', badge: 'NEW',
+    blurb: 'The Nerazzurri stripes never miss. Inter’s 26/27 home shirt — timeless Milanese design.' },
+  { slug: 'bayern-home-26-27', teamName: 'Bayern Munich', season: '26/27', kitType: 'HOME', league: 'Bundesliga', categoryType: 'CLUB', price: 24999, image: '/images/products/bayern-home.webp', badge: 'NEW',
+    blurb: 'Mia san mia. Bayern’s 26/27 home shirt in classic red — Bavarian power, Bundesliga standard.' },
+  { slug: 'dortmund-home-26-27', teamName: 'Borussia Dortmund', season: '26/27', kitType: 'HOME', league: 'Bundesliga', categoryType: 'CLUB', price: 24999, image: null, badge: 'NEW',
+    blurb: 'Echte Liebe. The Yellow Wall’s colours for 26/27 — loud as the Signal Iduna Park, bright as Malete midday.' },
+  { slug: 'psg-home-26-27', teamName: 'Paris Saint-Germain', season: '26/27', kitType: 'HOME', league: 'Ligue 1', categoryType: 'CLUB', price: 24999, image: '/images/products/psg-home.webp', badge: 'NEW',
+    blurb: 'Ici c’est Paris. The 26/27 PSG home shirt — navy with the signature red stripe, Parisian style for KWASU streets.' },
   // ---------- NATIONAL TEAMS ----------
-  { slug: 'nigeria-home-25-26', teamName: 'Nigeria', season: '25/26', kitType: 'HOME', league: 'Super Eagles', categoryType: 'NATIONAL', price: 10000, image: '/images/products/nigeria-home.webp', badge: 'BESTSELLER', featured: true,
-    blurb: 'UP SUPER EAGLES! The green-and-white of Nigeria for 25/26. Rep your country on campus — the most patriotic shirt in Malete.' },
-  { slug: 'nigeria-away-25-26', teamName: 'Nigeria', season: '25/26', kitType: 'AWAY', league: 'Super Eagles', categoryType: 'NATIONAL', price: 10000, image: '/images/products/nigeria-home.webp',
-    blurb: 'The Super Eagles away shirt for 25/26 — a fresh design for away fixtures and everyday flex.' },
-  { slug: 'argentina-home-25-26', teamName: 'Argentina', season: '25/26', kitType: 'HOME', league: 'World Champions', categoryType: 'NATIONAL', price: 12000, image: '/images/products/argentina-home.webp', featured: true,
-    blurb: 'Albiceleste stripes with champions’ energy. The Argentina home shirt — Messi’s colours, three stars on the chest.' },
-  { slug: 'portugal-home-25-26', teamName: 'Portugal', season: '25/26', kitType: 'HOME', league: 'Seleção das Quinas', categoryType: 'NATIONAL', price: 12000, image: '/images/products/portugal-home.webp', featured: true,
-    blurb: 'Deep red with the iconic crest — Portugal’s 25/26 home shirt. For CR7 fans who already own the Al Nassr one.' },
-  { slug: 'brazil-home-25-26', teamName: 'Brazil', season: '25/26', kitType: 'HOME', league: 'Seleção', categoryType: 'NATIONAL', price: 11500, image: '/images/products/brazil-home.webp',
-    blurb: 'O amarelinho! The classic canary yellow of Brazil — five stars, endless flair. Joga bonito in Malete.' },
-  { slug: 'england-home-25-26', teamName: 'England', season: '25/26', kitType: 'HOME', league: 'Three Lions', categoryType: 'NATIONAL', price: 11500, image: '/images/products/england-home.webp',
-    blurb: 'The Three Lions’ classic white for 25/26. It’s coming home — or at least it’s coming to Malete.' },
-  { slug: 'france-home-25-26', teamName: 'France', season: '25/26', kitType: 'HOME', league: 'Les Bleus', categoryType: 'NATIONAL', price: 12000, image: '/images/products/france-home.webp',
-    blurb: 'Les Bleus navy for 25/26 — world-champion style, two stars and a golden rooster.' },
-  { slug: 'spain-home-25-26', teamName: 'Spain', season: '25/26', kitType: 'HOME', league: 'La Roja', categoryType: 'NATIONAL', price: 11500, image: '/images/products/spain-home.webp',
-    blurb: 'La Roja red for 25/26 — European champions’ colours with that unmistakable Spanish flair.' },
+  { slug: 'nigeria-stadium-home-26-27', name: 'Nigeria Stadium Home Jersey 26/27', teamName: 'Nigeria', season: '26/27', kitType: 'HOME', league: 'Super Eagles', categoryType: 'NATIONAL', price: 26999, image: '/images/products/nigeria-home.webp', badge: 'BESTSELLER', featured: true,
+    blurb: 'UP SUPER EAGLES! The green-and-white of Nigeria for 26/27 — the stadium edition fans wear on matchday. The most patriotic shirt in Malete.' },
+  { slug: 'argentina-messi-26-27', name: 'Argentina Messi Home Jersey 26/27', teamName: 'Argentina', season: '26/27', kitType: 'HOME', league: 'World Champions', categoryType: 'NATIONAL', price: 28999, image: '/images/products/argentina-messi-26-27.jpg', badge: 'BESTSELLER', featured: true,
+    blurb: 'Albiceleste stripes with champions’ energy — Messi’s colours, three stars on the chest. The number 10 is already waiting for you.' },
+  { slug: 'brazil-retro-2024', name: 'Brazil 2024 Home Retro Jersey', teamName: 'Brazil', season: '2024', kitType: 'HOME', league: 'Seleção', categoryType: 'NATIONAL', price: 28999, image: '/images/products/brazil-home.webp',
+    blurb: 'O amarelinho! The classic canary yellow of Brazil in the 2024 retro cut — five stars, endless flair. Joga bonito in Malete.' },
+  { slug: 'england-home-26-27', teamName: 'England', season: '26/27', kitType: 'HOME', league: 'Three Lions', categoryType: 'NATIONAL', price: 24999, image: '/images/products/england-home.webp', badge: 'NEW',
+    blurb: 'The Three Lions’ classic white for 26/27. It’s coming home — or at least it’s coming to Malete.' },
+  { slug: 'england-away-26-27', teamName: 'England', season: '26/27', kitType: 'AWAY', league: 'Three Lions', categoryType: 'NATIONAL', price: 24999, image: '/images/products/england-home.webp', badge: 'NEW',
+    blurb: 'England’s 26/27 away colours — the away-day edition for Three Lions faithful.' },
 ]
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'] as const
 
 function description(seed: ProductSeed): string {
+  if (seed.desc) return seed.desc
   const kitWord = seed.kitType === 'HOME' ? 'home shirt' : seed.kitType === 'AWAY' ? 'away shirt' : 'third kit'
   return `${seed.blurb}\n\nQuality fan-version replica in breathable polyester that survives Nigerian washing machines. True-to-size regular fit. Official-style team crest and brand details.\n\nWant the full matchday feel? Upgrade to Player Version for the exact fit and tech the pros wear, or add customisation — your name and favourite number printed in the official font.\n\nOrdering is simple: place your order, we confirm availability on WhatsApp, you pay by transfer or cash, then pick up in Malete or get it delivered to your hostel.` }
 
@@ -195,9 +207,12 @@ async function main() {
   let productIndex = 0
   for (const seed of PRODUCTS) {
     productIndex++
+    const displayName = seed.name
+      ?? `${seed.teamName} ${seed.kitType === 'THIRD' ? 'Third Kit' : seed.kitType === 'HOME' ? 'Home Shirt' : 'Away Shirt'} ${seed.season}`
     const product = await db.product.upsert({
       where: { slug: seed.slug },
       update: {
+        name: displayName,
         basePrice: seed.price,
         imageUrl: seed.image,
         badge: seed.badge ?? null,
@@ -206,7 +221,7 @@ async function main() {
       },
       create: {
         slug: seed.slug,
-        name: `${seed.teamName} ${seed.kitType === 'THIRD' ? 'Third Kit' : seed.kitType === 'HOME' ? 'Home Shirt' : 'Away Shirt'} ${seed.season}`,
+        name: displayName,
         teamName: seed.teamName,
         season: seed.season,
         kitType: seed.kitType,
@@ -246,6 +261,20 @@ async function main() {
     }
   }
   console.log(`✓ ${PRODUCTS.length} products seeded (variants upserted; ${variantCount} new)`)
+
+  // 5b) Retire off-catalog products ---------------------------------------------
+  // The catalog mirrors mysportskit.com.ng. Products seeded earlier that are no
+  // longer in PRODUCTS are DEACTIVATED, never deleted, so historical orders
+  // keep their line items.
+  const catalogSlugs = new Set(PRODUCTS.map((p) => p.slug))
+  const all = await db.product.findMany({ select: { id: true, slug: true, active: true } })
+  const offCatalog = all.filter((p) => !catalogSlugs.has(p.slug) && p.active)
+  if (offCatalog.length) {
+    await db.product.updateMany({ where: { id: { in: offCatalog.map((p) => p.id) } }, data: { active: false } })
+    console.log(`✓ Deactivated ${offCatalog.length} off-catalog products: ${offCatalog.map((p) => p.slug).join(', ')}`)
+  } else {
+    console.log('✓ No off-catalog products to deactivate')
+  }
 
   console.log('\nSEED COMPLETE')
   console.log(`  Admin login: ${adminEmail}`)
