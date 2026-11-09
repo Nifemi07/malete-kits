@@ -43,17 +43,32 @@ bun run db:seed
 bun run dev        # http://localhost:3000
 ```
 
-### Default admin login
+### Admin login
 
 | | |
 |---|---|
 | URL | `/#/admin` (or the “Store Login” link in the footer) |
-| Email | `owner@maletekits.com` |
-| Password | `MaleteAdmin@2026!` |
+| Email | `ADMIN_EMAIL` (default `owner@maletekits.com`) |
+| Password | whatever `ADMIN_PASSWORD` contained when the account was seeded or rotated — **no default password exists** |
 
-> ⚠️ Change the password immediately: set `ADMIN_PASSWORD` in `.env` before seeding, or
-> edit the admin user in the database. The seeded WhatsApp number `08012345678` is a
-> **placeholder** — replace it in **Admin → Settings** so customer WhatsApp links work.
+> 🔐 **Rotate the password any time** (works against the local SQLite database or a
+> production PostgreSQL database):
+>
+> ```bash
+> ADMIN_PASSWORD='new-pass' bash scripts/rotate-admin-password.sh                                  # local
+> ADMIN_PASSWORD='new-pass' PROD_DATABASE_URL='postgres://…' bash scripts/rotate-admin-password.sh # production
+> ```
+>
+> Re-seeding with `ADMIN_PASSWORD` set also rotates an existing admin's password. Seeding
+> **without** it never installs a known default: a fresh account gets a random password
+> (printed once by the seed), and an existing account is left untouched.
+
+**WhatsApp number:** the store seeds with an **empty** WhatsApp number on purpose — a
+placeholder like `08012345678` would send customers to a stranger's chat. All storefront
+WhatsApp links stay hidden until the owner sets the real number in
+**Admin → Settings**; any `080…` / `+234…` format is accepted and normalized to the
+international `234…` format that wa.me links need. To preset it when seeding a fresh
+database, pass `SEED_WHATSAPP_NUMBER` (or `OWNER_WHATSAPP_NUMBER`) instead.
 
 ## First-run checklist for the store owner
 
@@ -77,7 +92,7 @@ missing email/WhatsApp credentials mean notifications are logged as FAILED (visi
 |----------|----------|---------|
 | `DATABASE_URL` | ✅ | SQLite file (dev) or PostgreSQL URL (prod) |
 | `AUTH_SECRET` | ✅ (prod) | Signs admin session JWTs — use a long random string |
-| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | seed only | Initial admin credentials |
+| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | seed + rotation | Admin credentials; `ADMIN_PASSWORD` is also what `scripts/rotate-admin-password.sh` applies |
 | `BREVO_API_KEY` | optional | Enables transactional emails (Brevo) |
 | `BREVO_SENDER_EMAIL` | optional | Verified sender, e.g. `orders@yourdomain.com` |
 | `BREVO_SENDER_NAME` | optional | Display name (default `MALÈTE KITS`) |

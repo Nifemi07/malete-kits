@@ -6,6 +6,7 @@
 // payment details in the admin dashboard (Settings) — we never invent them.
 // ---------------------------------------------------------------------------
 import { PrismaClient } from '@prisma/client'
+import { randomBytes } from 'crypto'
 import { hashPassword } from '../src/lib/auth'
 
 const db = new PrismaClient()
@@ -101,11 +102,15 @@ async function main() {
   console.log('Seeding MALÈTE KITS…')
 
   // 1) Admin user -------------------------------------------------------------
+  // The password comes from ADMIN_PASSWORD. Re-seeding WITH it set rotates an
+  // existing admin's password; seeding WITHOUT it never installs a known
+  // default — a fresh account gets a random password, printed once below.
   const adminEmail = (process.env.ADMIN_EMAIL || 'owner@maletekits.com').toLowerCase()
-  const adminPassword = process.env.ADMIN_PASSWORD || 'MaleteAdmin@2026!'
+  const adminPassword = process.env.ADMIN_PASSWORD || randomBytes(12).toString('hex')
+  const existingAdmin = await db.adminUser.findUnique({ where: { email: adminEmail } })
   const admin = await db.adminUser.upsert({
     where: { email: adminEmail },
-    update: {},
+    update: process.env.ADMIN_PASSWORD ? { passwordHash: hashPassword(adminPassword) } : {},
     create: {
       email: adminEmail,
       name: 'Store Owner',
@@ -113,7 +118,13 @@ async function main() {
       passwordHash: hashPassword(adminPassword),
     },
   })
-  console.log(`✓ Admin user: ${adminEmail} ${process.env.ADMIN_PASSWORD ? '(password from ADMIN_PASSWORD env)' : '(default password — see README, change after first login)'}`)
+  if (process.env.ADMIN_PASSWORD) {
+    console.log(`✓ Admin user: ${adminEmail} (password from ADMIN_PASSWORD env)`)
+  } else if (existingAdmin) {
+    console.log(`✓ Admin user: ${adminEmail} (existing password untouched — rotate with scripts/rotate-admin-password.sh)`)
+  } else {
+    console.log(`✓ Admin user: ${adminEmail} created with a RANDOM password (shown once — store it now): ${adminPassword}`)
+  }
 
   // 2) Store settings ----------------------------------------------------------
   // One-time PRODUCTION overrides — passed as env vars only when seeding a fresh
@@ -128,7 +139,11 @@ async function main() {
     update: {},
     create: {
       id: 'singleton',
-      whatsappNumber: process.env.SEED_WHATSAPP_NUMBER || process.env.OWNER_WHATSAPP_NUMBER || '08012345678', // PLACEHOLDER — owner must update in Admin → Settings
+      // Starts EMPTY on purpose: a placeholder number would send customers to a
+      // stranger's WhatsApp. Storefront WhatsApp links stay hidden while this is
+      // empty; the owner sets the real number in Admin → Settings (080… local
+      // format is normalized to international 234… automatically on save).
+      whatsappNumber: process.env.SEED_WHATSAPP_NUMBER || process.env.OWNER_WHATSAPP_NUMBER || '',
       supportEmail: process.env.SEED_SUPPORT_EMAIL || 'hello@maletekits.com',
       storeAddress: 'KWASU Main Campus Area, Malete, Kwara State',
       openingHours: 'Mon–Sat, 9:00am – 8:00pm',
@@ -234,7 +249,7 @@ async function main() {
 
   console.log('\nSEED COMPLETE')
   console.log(`  Admin login: ${adminEmail}`)
-  console.log(`  Admin password: ${process.env.ADMIN_PASSWORD ? '(from env)' : 'MaleteAdmin@2026! — CHANGE THIS AFTER FIRST LOGIN'}`)
+  console.log(`  Admin password: ${process.env.ADMIN_PASSWORD ? '(from ADMIN_PASSWORD env)' : existingAdmin ? '(unchanged — rotate with scripts/rotate-admin-password.sh)' : '(random — see the admin line above)'}`)
   console.log(`  Promo code: ${settings.promoCode} (${settings.promoPercent}% off, max ₦${settings.promoMaxNaira})`)
 }
 
